@@ -1,0 +1,23 @@
+tar -vzxf nomedoarquivo.tar.gz
+mongorestore -d suite_suporte suite_suporte/
+
+
+    let time = 0;
+    let count = 0;
+    for (let i = 0; i < data.length; i++) {
+        if (data[i].atendentes[0]) {
+            time += calMinDiferenceDate(data[i].atendentes[0].inicio, data[i].createdAt);
+        }
+        count += 1;
+    }
+    console.log(time / count);
+    console.log(count)
+
+    Para inicial o Daemon do mongo faça:
+
+mongod --fork --logpath /var/log/mongodb.log
+Para finalizar faça:
+
+mongod --shutdown
+
+

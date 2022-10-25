@@ -1,0 +1,31 @@
+{
+    "name": "myapp",
+    "version": "1.0.0",
+    "private": true,
+    "type": "module",
+    "author": {
+        "name": "Ícaro Emannuel",
+        "email": "emannuel.e@gmail.com"
+    },
+    "scripts": {
+        "dev": "nodemon ./src/server.js  --ignore node_modules/ --ignore public/",
+        "start": "forever start ./src/server.js",
+        "mongo": "mongod --dbpath /var/lib/mongodb --fork --logpath /dev/null"
+    },
+    "dependencies": {
+        "@prisma/client": "4.4.0",
+        "@types/express": "^4.17.14",
+        "bson": "^4.7.0",
+        "cors": "^2.8.5",
+        "dotenv": "^16.0.3",
+        "express": "~4.16.1",
+        "forever": "^4.0.3",
+        "mongodb": "^4.10.0",
+        "mongoose": "^6.6.5",
+        "prisma": "^4.4.0"
+    },
+    "devDependencies": {
+        "nodemon": "^2.0.20",
+        "vite": "^3.1.8"
+    }
+}
