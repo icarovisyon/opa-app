@@ -20,4 +20,11 @@ async function getTotalAttendancesAll(req, res) {
     return res.status(200).json(response)
 }
 
-export default { getTimeAttendancesAll, getAttendances, getTotalAttendancesAll }
+async function getAttendancesByReason(req, res) {
+    const { dateStart, dateFinal, gestor } = req.query
+    const response = await service.attendancesByReason(gestor, dateStart, dateFinal)
+    return res.status(200).json(response)
+}
+
+
+export default { getTimeAttendancesAll, getAttendances, getTotalAttendancesAll, getAttendancesByReason }

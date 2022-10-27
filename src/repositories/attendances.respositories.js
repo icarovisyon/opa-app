@@ -71,4 +71,24 @@ async function totalAttendancesAll(dateStart, dateFinal) {
     }
 }
 
-export default { attendancesAll, attendances, totalAttendancesAll }
+
+async function attendancesByReason(reason, dateStart, dateFinal, departament) {
+    try {
+        const conn = mongoose.createConnection('mongodb://localhost:27017/suite_opa')
+        const atendimento = conn.model('atendimentos', model.atendimentos)
+
+        const response = await atendimento.find({
+            createdAt: {
+                $gt: new Date(dateStart), $lt: new Date(dateFinal),
+            },
+            id_motivo_atendimento: reason,
+            setor: departament
+        }).count()
+        await conn.close()
+        return response
+    } catch (error) {
+        return false
+    }
+}
+
+export default { attendancesAll, attendances, totalAttendancesAll, attendancesByReason }

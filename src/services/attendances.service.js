@@ -1,5 +1,6 @@
 import Consult from '../repositories/attendances.respositories.js'
 import { calMinutsDiferenceDate, departmentSelect } from './treatments.js'
+import reason from '../repositories/reasonByAttendances.js'
 
 async function timeAttendancesDepartment(departament, dateStart, dateFinal) {
     try {
@@ -103,5 +104,39 @@ async function totalAttendancesAll(dateStart, dateFinal) {
     }
 }
 
+async function attendancesByReason(manager, dateStart, dateFinal) {
+    try {
+        const departments = departmentSelect(manager)
 
-export default { timeAttendancesAll, timeAttendancesDepartment, totalAttendancesAll }
+        let count = 1
+
+        const data = []
+        for (const department in departments) {
+            const reasons = await reason.reasonsByDepartment(departments[department].id)
+
+            for (const reason in reasons) {
+                const countAttendances = await Consult.attendancesByReason(
+                    reasons[reason]._id,
+                    dateStart,
+                    dateFinal,
+                    departments[department].id
+
+                )
+                if (countAttendances > 0) {
+                    data.push({
+                        id: count++,
+                        motivo: reasons[reason].motivo,
+                        quantidade: countAttendances
+                    })
+                }
+            }
+        }
+        return data
+    } catch (err) {
+        console.log(err)
+        return false
+    }
+}
+
+
+export default { timeAttendancesAll, timeAttendancesDepartment, totalAttendancesAll, attendancesByReason }

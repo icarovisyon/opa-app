@@ -1,5 +1,6 @@
 import { useEffect, useState, KeyboardEvent } from "react";
 import styled from "styled-components";
+import { ContentDate, DateContent } from "../components/dateContent";
 import { GraphicBar } from "../components/graphics/bar";
 import { SideBar } from "../components/sideBar";
 import { api } from "../hooks/useEffect";
@@ -184,7 +185,7 @@ export function Attendance() {
                     Pesquisar
                 </ProcessSheach>
                 <ContentGraphics>
-                    {/*                     {assumingData?.data && <GraphicBar
+                    {/*                   {assumingData?.data && <GraphicBar
                         dataSets={assumingData?.data}
                         description={assumingData?.description}
                         labels={assumingData?.label} />
@@ -231,21 +232,7 @@ const SheachDepartment = styled.input`
     background-color: transparent;
     display: inline;
 `
-const ContentDate = styled.div`
-    display: flex;
-    flex-wrap: nowrap;
-    align-content: space-between;
-    flex-direction: row;
-    align-items: center;
-`
 
-const DateContent = styled.input`
-    width: 120px;
-    height: 40px;
-    border-radius: 15px;
-    font-size: 15px;
-    text-align: center;
-`
 const Department = styled.select`
     width: 210px;
     height: 42px;

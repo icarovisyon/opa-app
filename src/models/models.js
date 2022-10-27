@@ -59,7 +59,7 @@ const atendimentosSchema = new mongoose.Schema({
     updatedAt: Date,
     __v: Number,
     estrelas_atend: Number,
-    id_motivo_atendimento: String
+    id_motivo_atendimento: ObjectId
 }, { collection: 'atendimentos' }
 )
 
@@ -106,5 +106,24 @@ const tagsSchema = new mongoose.Schema({
 }, { collection: 'tags' }
 );
 
+const motivoAtendimentoSchema = new mongoose.Schema({
+    _id: ObjectId,
+    motivo: String,
+    departamentos: ObjectId,
+    createdAt: String,
+    cor: String,
+    updateAt: String,
+    _v: String
+}, { collection: 'motivo_atendimentos' }
+);
 
-export default { atendimentos: atendimentosSchema, departamentosUsuarios: departamentosUsuariosSchema, usuario: usuariosSchema, tags: tagsSchema, cliente: clienteSchema, ObjectId: ObjectId }
+
+export default {
+    atendimentos: atendimentosSchema,
+    departamentosUsuarios: departamentosUsuariosSchema,
+    usuario: usuariosSchema,
+    tags: tagsSchema,
+    cliente: clienteSchema,
+    motivoAtendimentos: motivoAtendimentoSchema,
+    ObjectId: ObjectId
+}
