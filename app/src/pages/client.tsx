@@ -41,5 +41,6 @@ const Button = styled.button`
     border: none;
     cursor: pointer;
     display: inline;
+    box-shadow: 0 1rem 2rem hsl(0 0% 0% / 20%);
 `
 

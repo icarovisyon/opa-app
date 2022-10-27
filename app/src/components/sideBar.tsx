@@ -54,6 +54,9 @@ const Main = styled.div`
     box-shadow: rgba(0, 0, 0, 0.2) 2px 2px 2px 1px;
     border-radius: 10px;
     padding: 0 0 0 10px;
+    @media (max-height: 800px){
+        width: 250px;
+    }
 `
 
 const List = styled.ul`
@@ -70,6 +73,9 @@ const Navigation = styled.li`
     display: inline-flex;
     width: 150px;
     height: 24px;
+    @media (max-height: 800px){
+        width: 140px;
+    }
 `
 const Icon = styled.i`
     padding: 0 6px 0 0;

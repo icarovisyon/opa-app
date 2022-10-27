@@ -22,4 +22,23 @@ function departmentSelect(select) {
     return false
 }
 
-export { calMinutsDiferenceDate, departmentSelect }
+function groupBy(array, key) {
+    return array.reduce((acc, item) => {
+
+        if (!acc[item._id[key]]) acc[item._id[key]] = []
+
+        acc[item._id[key]].push({
+            cliente: item._id.client,
+            avaliacao: item._id.avaliacao[0] || 0,
+            quantidade: item.count
+        })
+
+        return acc
+    }, {})
+}
+
+function orderBy(a, b) {
+    return a.media > b.media ? 1 : a.media < b.media ? -1 : 0;
+}
+
+export { calMinutsDiferenceDate, departmentSelect, groupBy, orderBy }

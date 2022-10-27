@@ -1,4 +1,3 @@
-import React from 'react';
 import {
     Chart as ChartJS,
     CategoryScale,
@@ -7,8 +6,8 @@ import {
     Title,
     Tooltip,
     Legend,
-} from 'chart.js';
-import { Bar } from 'react-chartjs-2';
+} from 'chart.js'
+import { Bar } from 'react-chartjs-2'
 
 ChartJS.register(
     CategoryScale,
@@ -26,34 +25,40 @@ export const options = {
             position: 'top' as const,
         },
         title: {
-            display: true,
-            text: 'Chart.js Bar Chart',
+            display: false,
+            text: 'Atendimentos por atendentes',
         },
     },
 };
 
-const labels = ['January', 'February', 'March', 'April', 'May', 'June', 'July'];
 
-export const data = {
-    labels,
-    datasets: [
-        {
-            label: 'Dataset 1',
-            data: [10, 11, 52, 12, 26, 11, 36],
-            backgroundColor: [
-                'rgba(255, 99, 132, 0.5)',
-                'rgba(202, 202, 202, 0.5)',
-                'rgba(4, 215, 223, 0.5)',
-                'rgba(11, 31, 0, 0.5)',
-                'rgba(255, 99, 132, 0.5)',
-                'rgba(27, 29, 14, 0.5)',
-                'rgba(255, 228, 197, 0.5)'
+interface GraphicBarProps {
+    labels: any[] | undefined,
+    dataSets: any[] | undefined,
+    description: string | undefined
+}
 
-            ],
-        }
-    ],
-};
+export function GraphicBar(props: GraphicBarProps) {
+    const data = {
+        labels: props.labels,
+        datasets: [
+            {
+                label: props.description,
+                data: props.dataSets,
+                backgroundColor: [
+                    '#567ebb',
+                    '#8a5df3',
+                    '#095169',
+                    '#3019c5',
+                    '#2b4c7e',
+                    '#71dbd2',
+                    '#6943e3',
+                    '#6f95ff'
 
-export function GraphicBar() {
+                ],
+            }
+        ],
+    }
+
     return <Bar options={options} data={data} />;
 }

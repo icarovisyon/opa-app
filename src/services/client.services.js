@@ -2,6 +2,7 @@ import Consult from '../repositories/client.repositories.js'
 import tags from '../repositories/tags.repositories.js'
 
 import listClients from '../file/clients.json' assert { type: "json" }
+import { groupBy, orderBy } from './treatments.js'
 
 async function clientTags(name) {
     try {
@@ -12,45 +13,29 @@ async function clientTags(name) {
                 message: "tag inexistente!"
             }
         }
-        const clients = await Consult.clientsTag(tag[0]._id)
 
 
         const data = []
 
-        clients.map(client => {
-            data.push({
-                id: client._id,
-                nome: client.nome,
-                status: client.status,
-                tag: tag[0].nome,
+        for (const index in tag) {
+            const clients = await Consult.clientsTag(tag[index]._id)
 
+            clients.map(client => {
+                data.push({
+                    id: client._id,
+                    nome: client.nome,
+                    status: client.status,
+                    tag: tag[0].nome,
+
+                })
             })
-        })
+        }
 
         return data
     } catch (error) {
         console.log(error)
         return false
     }
-}
-
-function groupBy(array, key) {
-    return array.reduce((acc, item) => {
-
-        if (!acc[item._id[key]]) acc[item._id[key]] = []
-
-        acc[item._id[key]].push({
-            cliente: item._id.client,
-            avaliacao: item._id.avaliacao[0] || 0,
-            quantidade: item.count
-        })
-
-        return acc
-    }, {})
-}
-
-function orderBy(a, b) {
-    return a.media > b.media ? 1 : a.media < b.media ? -1 : 0;
 }
 
 async function customerReviewMedia(dateStart, dateFinal) {
@@ -85,7 +70,8 @@ async function customerReviewMedia(dateStart, dateFinal) {
                 data.push({
                     media: media,
                     quantidade: count,
-                    cliente: dataClient.nome
+                    cliente: dataClient.nome,
+                    id: dataClient._id
                 })
             }
         }

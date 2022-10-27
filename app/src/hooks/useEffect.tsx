@@ -5,8 +5,8 @@ export const api = axios.create({
     baseURL: "http://192.168.27.15:8000"
 })
 
-export function useFetch<T = unknown>(url: string) {
-    const [data, setData] = useState<T | null>(null)
+export function useFetch<T = unknown>(url: string, valueDefaultt: T) {
+    const [data, setData] = useState<T>(valueDefaultt)
     const [isFetching, setIsFetching] = useState(true)
     const [error, setError] = useState(false)
 

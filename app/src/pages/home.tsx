@@ -1,29 +1,32 @@
-import { useEffect, useState } from "react"
 import styled from "styled-components"
-import { Graphic } from "../components/graphic"
 import { GraphicBar } from "../components/graphics/bar"
 import { SideBar } from "../components/sideBar"
-import { Table } from "../components/tableReviewClients"
+import { ReviewClients } from "../components/tableReviewClients"
 import { Text } from "../components/text"
 import { Title } from "../components/title"
 import { dateFilterDefaul, px2vw } from "../config/config"
 import { useFetch } from "../hooks/useEffect"
 
 export interface TimeMidRowProps {
-    tempo: String,
-    chamados: String,
-    departamentos: string
+    tempo?: String,
+    chamados?: String,
+    departamentos?: string
 }
 export interface StaticsAttendanceProps {
-    total: number,
-    assumidos: number,
-    semInteracao: number
+    total?: number,
+    assumidos?: number,
+    semInteracao?: number
 }
 
-export function Homepage() {
-    const { data: timeMidRow, isFetching: loadingTimeMidRow } = useFetch<TimeMidRowProps>(`/call-time-all?dateStart=${dateFilterDefaul.start}&dateFinal=${dateFilterDefaul.final}`)
+const timeMidRowDefault: TimeMidRowProps = {}
 
-    const { data: staticsAttendance, isFetching: loadingStaticsAttendance } = useFetch<StaticsAttendanceProps>(`/attendance-statistics?dateStart=${dateFilterDefaul.start}&dateFinal=${dateFilterDefaul.final}`)
+const staticsAttendanceDefault: StaticsAttendanceProps = {}
+
+
+export function Homepage() {
+    const { data: timeMidRow, isFetching: loadingTimeMidRow } = useFetch<TimeMidRowProps>(`/call-time-all?dateStart=${dateFilterDefaul.start}&dateFinal=${dateFilterDefaul.final}`, timeMidRowDefault)
+
+    const { data: staticsAttendance, isFetching: loadingStaticsAttendance } = useFetch<StaticsAttendanceProps>(`/attendance-statistics?dateStart=${dateFilterDefaul.start}&dateFinal=${dateFilterDefaul.final}`, staticsAttendanceDefault)
 
     return (
         <Main>
@@ -61,9 +64,9 @@ export function Homepage() {
                         </ValueCard>
                     </Cards>
                 </ContentCards>
-                <ContentTable>
-                    <Table />
-                </ContentTable>
+                <ContentReviewClient>
+                    <ReviewClients />
+                </ContentReviewClient>
             </Content>
         </Main>
     )
@@ -122,28 +125,21 @@ const Loading = styled.span`
 
 const ContentGraphic = styled.div`
 `
-const ContentTable = styled.div`
-    box-shadow: 0 0rem 1rem hsl(0 0% 0% / 20%);
+const ContentReviewClient = styled.div`
+    width: 450px;
     padding: 25px 0 0 10px;
     background-color: transparent;
-    max-width: 450px;
-    min-width: 400px;
-    max-height: 390px;
     border-radius: 10px;
     color: rgb(243 243 243);
     display: flex;
     flex-direction: column;
     align-content: center;
     margin: 0 0 10px 0;
+    display: flex;
+    flex-direction: row;
 
-    @media (min-height: 768px){
-        max-width: 500px;
-        min-height: ${px2vw(300, 768)};
-        height: 100%;
-    }
-    @media (min-height: 1024px){
-        width: ${px2vw(500)};
-        min-height: ${px2vw(200)};
-        height: 100%;
+    @media (min-width: 1000px){
+        width: 500px;
+        height: 700px;
     }
 `
