@@ -1,6 +1,6 @@
 import { useEffect, useState, KeyboardEvent } from "react";
 import styled from "styled-components";
-import { ContentDate, DateContent } from "../components/dateContent";
+import { InputDate, DateContent } from "../components/dateContent";
 import { GraphicBar } from "../components/graphics/bar";
 import { SideBar } from "../components/sideBar";
 import { api } from "../hooks/useEffect";
@@ -150,22 +150,20 @@ export function Attendance() {
             <SideBar selected="Atendente" />
             <Main>
                 <ContentTop>
-
                     <Sheach>
                         <SheachDepartment type={"text"} placeholder={"Digite o departamento"} onKeyDown={handleChangeGestor} />
                         <Icon className="fa fa-search" />
                     </Sheach>
 
-                    <ContentDate>
+                    <DateContent>
                         <Description>Inicial:</Description>
-                        <DateContent value={dateStart} id="dateStart" type={"date"} onChange={event => setDateStart(event.target.value)} />
-                    </ContentDate>
+                        <InputDate value={dateStart} id="dateStart" type={"date"} onChange={event => setDateStart(event.target.value)} />
+                    </DateContent>
 
-                    <ContentDate>
+                    <DateContent>
                         <Description>Final:</Description>
-                        <DateContent value={dateFinal} id="dateFinal" type={"date"} onChange={event => setDateFinal(event.target.value)} />
-                    </ContentDate>
-
+                        <InputDate value={dateFinal} id="dateFinal" type={"date"} onChange={event => setDateFinal(event.target.value)} />
+                    </DateContent>
 
                 </ContentTop>
                 <Department value={setor} onChange={event => setSetor(event.target.value)}>
