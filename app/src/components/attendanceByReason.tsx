@@ -8,6 +8,8 @@ import { Description } from "./Description"
 import { DateContent, InputDate } from "./dateContent"
 import { Button } from "./Button"
 
+import { CSVLink } from "react-csv"
+
 const styles = {
     Description: {
         fontSize: "16px",
@@ -16,6 +18,12 @@ const styles = {
     Button: {
         backgroundColor: "#8a58ff",
         margin: "0 10px 0"
+    },
+    Link: {
+        borderRadius: "10px",
+        backgroundColor: "#8a58ff",
+        color: "#fff",
+        padding: "10px"
     }
 };
 
@@ -41,6 +49,15 @@ export function AttendanceByReason() {
 
     const [listAttendances, setListAttendances] = useState<GridRowsProp>(defaultGrid)
 
+    const [csv, setCsv] = useState<DataGraphics[]>([{
+        motivo: "",
+        quantidade: 0
+    }])
+
+    const headers = [
+        { label: "Motivo", key: "motivo" },
+        { label: "Quantidade", key: "quantidade" }
+    ]
 
     const handleChange = (event: KeyboardEvent<HTMLInputElement>) => {
         const target = event.target as HTMLInputElement
@@ -59,6 +76,7 @@ export function AttendanceByReason() {
                 .then(response => {
                     if (response.data) {
                         setListAttendances(response.data)
+                        setCsv(response.data)
                         setIsFeching(false)
                     }
                 })
@@ -83,13 +101,19 @@ export function AttendanceByReason() {
                 </DateContent>
 
                 <Button style={styles.Button} onClick={e => setReload(!reload)}>Pesquisar</Button>
+
+                <CSVLink style={styles.Link} data={csv} headers={headers}> CSV</CSVLink>
+
             </ContentTop>
 
             <Content>
                 {isFeching && <Loading>Carregando...</Loading>}
                 {listAttendances?.length > 0 &&
                     <ContentGrid>
-                        <DataGrid rows={listAttendances} columns={columnsGrid} />
+                        <DataGrid
+                            initialState={{ sorting: { sortModel: [{ field: 'quantidade', sort: 'desc' }] } }}
+                            rows={listAttendances}
+                            columns={columnsGrid} />
                     </ContentGrid>}
             </Content>
         </Main>
