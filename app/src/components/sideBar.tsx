@@ -19,7 +19,7 @@ export function SideBar({ selected }: SidebarProps) {
     {
         to: "/cliente",
         descrition: "Cliente",
-        icon: "fa-solid fa-user"
+        icon: "fa-solid fa-clipboard-user"
     },
     {
         to: "/atendente",

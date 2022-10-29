@@ -1,4 +1,5 @@
 import styled from "styled-components"
+import { DateContent, InputDate } from "../components/dateContent"
 import { GraphicBar } from "../components/graphics/bar"
 import { SideBar } from "../components/sideBar"
 import { ReviewClients } from "../components/tableReviewClients"
@@ -79,6 +80,11 @@ const Content = styled.div`
     margin: 0 50px 0 310px;
     padding: 35px 30px 0 30px;
 `
+
+const ContentTop = styled.div`
+    display: flex;
+`
+
 const ContentCards = styled.div`
     display: flex;
 `

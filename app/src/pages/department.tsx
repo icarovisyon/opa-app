@@ -27,23 +27,11 @@ export function Departamento() {
         <Main>
             <SideBar selected="Departamento" />
             <Content>
-                <>
-                    {modalReasonByAttendances && <Button onClick={() => setModalReasonByAttendances(!modalReasonByAttendances)}>Fechar</Button>}
-                    {modalReasonByAttendances && <AttendanceByReason />}
-                    <Button style={{ display: displayReasonByAttendances }} onClick={() => setModalReasonByAttendances(!modalReasonByAttendances)}>
-                        Estatisticas do departamento
-                    </Button>
-                </>
-                <>
-                    {modalAttendanceTimeStamp && <Button onClick={() => setModalAttendanceTimeStamp(!modalAttendanceTimeStamp)}>Fechar</Button>}
-                    {modalAttendanceTimeStamp && <AttendanceTimeStamp />}
-                    <Button style={{ display: displayReasonByAttendances }} onClick={() => {
-                        setModalReasonByAttendances(!modalReasonByAttendances)
-                        setModalReasonByAttendances(!modalReasonByAttendances)
-                    }}>
-                        Atedimentos por tempo de espera
-                    </Button>
-                </>
+                {modalReasonByAttendances && <Button onClick={() => setModalReasonByAttendances(!modalReasonByAttendances)}>Fechar</Button>}
+                {modalReasonByAttendances && <AttendanceByReason />}
+                <Button style={{ display: displayReasonByAttendances }} onClick={() => setModalReasonByAttendances(!modalReasonByAttendances)}>
+                    Estatisticas do departamento
+                </Button>
             </Content>
         </Main>
     )

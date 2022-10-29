@@ -2,11 +2,12 @@ import styled from "styled-components"
 
 export interface TitleProps {
     title: string
+    style?: {}
 }
 
-export function Title({ title }: TitleProps) {
+export function Title({ title, style }: TitleProps) {
     return (
-        <TextTitle>{title}</TextTitle>
+        <TextTitle style={style}>{title}</TextTitle>
     )
 }
 
