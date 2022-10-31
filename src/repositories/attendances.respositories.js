@@ -28,7 +28,7 @@ async function attendancesAll(dateStart, dateFinal) {
     }
 }
 
-async function attendances(departament, dateStart, dateFinal) {
+async function attendancesByDepartment(departament, dateStart, dateFinal) {
     try {
         const conn = mongoose.createConnection('mongodb://localhost:27017/suite_opa')
         const atendimento = conn.model('atendimentos', model.atendimentos)
@@ -91,4 +91,4 @@ async function attendancesByReason(reason, dateStart, dateFinal, departament) {
     }
 }
 
-export default { attendancesAll, attendances, totalAttendancesAll, attendancesByReason }
+export default { attendancesAll, attendancesByDepartment, totalAttendancesAll, attendancesByReason }

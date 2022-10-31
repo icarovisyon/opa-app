@@ -24,10 +24,6 @@ const pamela = [
         name: "Suporte a Atendimentos e Ordem de Serviço"
     },
     {
-        id: "5d39af5be45aaa674abf31e7",
-        name: "Suporte API"
-    },
-    {
         id: "5bf73d1d186f7d2b0d647a6a",
         name: "Inmap"
     },
@@ -38,6 +34,10 @@ const pamela = [
     {
         id: "5bf73d1d186f7d2b0d647a62",
         name: "Parametrizações e Homologação de carteiras de cobranças"
+    },
+    {
+        id: "5d39af5be45aaa674abf31e7",
+        name: "Suporte API"
     },
     {
         id: "622a499a4f6113f4742d8236",

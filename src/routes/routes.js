@@ -11,7 +11,7 @@ router.get('/call-time-all', attedances.getTimeAttendancesAll)
 router.get('/call-time-by-department/:department', attedances.getAttendances)
 router.get('/attendance-statistics', attedances.getTotalAttendancesAll)
 router.get('/attendance-reasons', attedances.getAttendancesByReason)
-
+router.get('/attendance-number', attedances.getnumberAttendancesByTime)
 
 
 router.get('/departments', departments.getDepartments)

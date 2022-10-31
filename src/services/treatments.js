@@ -1,7 +1,13 @@
 import departments from "../config/department.js"
 
+/**
+ * 
+ * @param {Date} dateOne 
+ * @param {Date} dateTwo 
+ * @returns diferanca_em_minutos
+ */
 function calMinutsDiferenceDate(dateOne, dateTwo) {
-    var minuts = (new Date(dateOne) - new Date(dateTwo)) / 1000 / 60
+    var minuts = (new Date(dateOne) - new Date(dateTwo)) / 1000 / 60  //minutos
     return minuts
 }
 

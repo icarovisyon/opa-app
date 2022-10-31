@@ -4,17 +4,17 @@ import reason from '../repositories/reasonByAttendances.js'
 
 async function timeAttendancesDepartment(departament, dateStart, dateFinal) {
     try {
+        if (dateStart == "" || dateFinal == "") {
+            return {
+                type: "error",
+                message: "Preencha um periodo de datas!"
+            }
+        }
         const departmentSelected = departmentSelect(departament)
         if (!departmentSelected) {
             return {
                 type: "error",
                 message: "Gerente inexistente!"
-            }
-        }
-        if (dateStart == "" || dateFinal == "") {
-            return {
-                type: "error",
-                message: "Preencha um periodo de datas!"
             }
         }
         let data = []
@@ -24,7 +24,7 @@ async function timeAttendancesDepartment(departament, dateStart, dateFinal) {
         for (const department in departmentSelected) {
             let timeMinuts = 0
 
-            let response = await Consult.attendances(departmentSelected[department].id, dateStart, dateFinal)
+            let response = await Consult.attendancesByDepartment(departmentSelected[department].id, dateStart, dateFinal)
 
             for (const attendance in response) {
                 if (response[attendance].atendentes[0]) {
@@ -138,5 +138,82 @@ async function attendancesByReason(manager, dateStart, dateFinal) {
     }
 }
 
+async function numberAttendancesByTime(departament, dateStart, dateFinal) {
+    try {
+        if (dateStart == "" || dateStart == undefined || dateFinal == "" || dateFinal == undefined) {
+            return {
+                type: "error",
+                message: "Preencha um periodo de datas!"
+            }
+        }
+        const departmentSelected = departmentSelect(departament)
 
-export default { timeAttendancesAll, timeAttendancesDepartment, totalAttendancesAll, attendancesByReason }
+
+
+        if (!departmentSelected) {
+            return {
+                type: "error",
+                message: "Gerente inexistente!"
+            }
+        }
+        const data = []
+        for (const department in departmentSelected) {
+            let minuts5 = 0
+            let minuts10 = 0
+            let minuts15 = 0
+            let minuts20 = 0
+            let minuts30 = 0
+            let minutsGreater30 = 0
+
+            let response = await Consult.attendancesByDepartment(departmentSelected[department].id, dateStart, dateFinal)
+
+            for (const attendance in response) {
+                if (response[attendance].atendentes[0]) {
+                    let timeMinuts = calMinutsDiferenceDate(response[attendance].atendentes[0].inicio, response[attendance].createdAt)
+
+                    if (timeMinuts < 6) {
+                        minuts5 += 1
+                    }
+                    if (timeMinuts > 5 && timeMinuts < 11) {
+                        minuts10 += 1
+                    }
+                    if (timeMinuts > 11 && timeMinuts < 16) {
+                        minuts15 += 1
+                    }
+                    if (timeMinuts > 16 && timeMinuts < 21) {
+                        minuts20 += 1
+                    }
+                    if (timeMinuts > 21 && timeMinuts < 31) {
+                        minuts30 += 1
+                    }
+                    if (timeMinuts > 31) {
+                        minutsGreater30 += 1
+                    }
+                }
+            }
+            data.push({
+                cinco: minuts5,
+                dez: minuts10,
+                quinze: minuts15,
+                vinte: minuts20,
+                trinta: minuts30,
+                maior: minutsGreater30,
+                setor: departmentSelected[department].name,
+                id: departmentSelected[department].id
+            })
+        }
+
+        return data
+    } catch (err) {
+        console.log(err)
+        return false
+    }
+}
+
+export default {
+    timeAttendancesAll,
+    timeAttendancesDepartment,
+    totalAttendancesAll,
+    attendancesByReason,
+    numberAttendancesByTime
+}

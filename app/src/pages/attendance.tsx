@@ -260,6 +260,7 @@ const Icon = styled.i`
 `
 const ContentGraphics = styled.div`
     padding: 25px 2px 50px;
+    max-width: 1800px;
 `
 const ProcessSheach = styled.button`
     width: 120px;
