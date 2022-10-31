@@ -165,6 +165,7 @@ const Main = styled.div`
     width: 100vw;
     height: 100vh;
     margin: 0 10px 40px 0;
+    animation: animateLeft 2s;
 `
 const ContentTop = styled.div`
     display: flex;

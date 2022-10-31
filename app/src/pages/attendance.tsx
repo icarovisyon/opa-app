@@ -210,6 +210,7 @@ const ContentTop = styled.div`
     align-content: center;
     justify-content: flex-start;
     align-items: center;
+    animation: animateLeft 2s;
 `
 const Sheach = styled.div`
     display: flex;
@@ -240,6 +241,7 @@ const Department = styled.select`
     font-size: 15px;
     color: #252525;
     margin: 0 10px 0 0;
+    animation: animateLeft 2s;
 `
 
 const Setor = styled(Department)`

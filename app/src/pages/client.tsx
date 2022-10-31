@@ -1,5 +1,6 @@
 import { ButtonHTMLAttributes, useEffect, useState } from "react"
 import styled from "styled-components"
+import { Button } from "../components/Button"
 import { SheachTagClient } from "../components/sheachTagClient"
 import { SideBar } from "../components/sideBar"
 
@@ -32,15 +33,3 @@ const Content = styled.div`
     margin: 0 50px 0 310px;
     padding: 35px 30px 0 30px;
 `
-const Button = styled.button`
-    background-color: #794ef4;
-    color: #fff;
-    padding: 10px;
-    font-size: 16px;
-    border-radius: 6px;
-    border: none;
-    cursor: pointer;
-    display: inline;
-    box-shadow: 0 1rem 2rem hsl(0 0% 0% / 20%);
-`
-

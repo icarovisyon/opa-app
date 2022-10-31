@@ -36,7 +36,7 @@ export function Homepage() {
                 <Title title="Indicadores:" />
                 <Text description="Periodo: 09/2022" />
                 <ContentCards>
-                    <Cards>
+                    <Cards className="animated">
                         <DescriptionCard>Tempo Médio na fila:</DescriptionCard>
                         <ValueCard>
                             {loadingTimeMidRow && <Loading>Carregando...</Loading>}
@@ -103,6 +103,7 @@ const Cards = styled.div`
     justify-content: space-evenly;
     align-items: center;
     box-shadow: 0 1rem 2rem hsl(0 0% 0% / 20%);
+    animation: animate 1s;
 `
 
 const DescriptionCard = styled.span`

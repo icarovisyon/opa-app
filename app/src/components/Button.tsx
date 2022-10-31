@@ -11,4 +11,5 @@ export const Button = styled.button`
     display: inline;
     box-shadow: 0 0rem 1rem hsl(0 0% 0% / 20%);
     margin: 0 5px;
+    animation: animateLeft 2s;
 `
