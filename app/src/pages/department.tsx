@@ -1,35 +1,26 @@
 import { Button } from "../components/Button"
 import { useEffect, useState } from "react"
 import styled from "styled-components";
-import { AttendanceByReason } from "../components/attendanceByReason"
+import { AttendanceByReason } from "../components/attendanceStatistics"
 import { SideBar } from "../components/sideBar"
-import { AttendanceTimeStamp } from "../components/attendanceTimeStamp";
 
 export function Departamento() {
-    const [modalReasonByAttendances, setModalReasonByAttendances] = useState(false)
+    const [modalAttendancesStatics, setModalAttendancesStatics] = useState(false)
     const [displayReasonByAttendances, setDisplayReasonByAttendances] = useState('block')
 
-    const [modalAttendanceTimeStamp, setModalAttendanceTimeStamp] = useState(false)
-    const [displayAttendanceTimeStamp, setDisplayAttendanceTimeStamp] = useState('block')
-
 
 
     useEffect(() => {
-        setDisplayReasonByAttendances(modalReasonByAttendances ? 'none' : 'block')
-    }, [modalReasonByAttendances])
-
-    useEffect(() => {
-        setDisplayAttendanceTimeStamp(modalAttendanceTimeStamp ? 'none' : 'block')
-        setDisplayReasonByAttendances(modalReasonByAttendances ? 'none' : 'block')
-    }, [modalAttendanceTimeStamp])
+        setDisplayReasonByAttendances(modalAttendancesStatics ? 'none' : 'block')
+    }, [modalAttendancesStatics])
 
     return (
         <Main>
             <SideBar selected="Departamento" />
             <Content>
-                {modalReasonByAttendances && <Button onClick={() => setModalReasonByAttendances(!modalReasonByAttendances)}>Fechar</Button>}
-                {modalReasonByAttendances && <AttendanceByReason />}
-                <Button style={{ display: displayReasonByAttendances }} onClick={() => setModalReasonByAttendances(!modalReasonByAttendances)}>
+                {modalAttendancesStatics && <Button onClick={() => setModalAttendancesStatics(!modalAttendancesStatics)}>Fechar</Button>}
+                {modalAttendancesStatics && <AttendanceByReason />}
+                <Button style={{ display: displayReasonByAttendances }} onClick={() => setModalAttendancesStatics(!modalAttendancesStatics)}>
                     Estatisticas do departamento
                 </Button>
             </Content>

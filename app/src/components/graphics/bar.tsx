@@ -38,13 +38,19 @@ interface GraphicBarProps {
     description: string | undefined
 }
 
-export function GraphicBar(props: GraphicBarProps) {
+export interface DataGraphBar {
+    label: any[],
+    data: any[],
+    description: string
+}
+
+export function GraphicBar({ dataSets, description, labels }: GraphicBarProps) {
     const data = {
-        labels: props.labels,
+        labels: labels,
         datasets: [
             {
-                label: props.description,
-                data: props.dataSets,
+                label: description,
+                data: dataSets,
                 backgroundColor: [
                     '#567ebb',
                     '#8a5df3',

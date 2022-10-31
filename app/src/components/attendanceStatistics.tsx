@@ -8,8 +8,8 @@ import { Description } from "./Description"
 import { DateContent, InputDate } from "./dateContent"
 import { Button } from "./Button"
 import { CSVLink } from "react-csv"
-import { blue } from "@mui/material/colors"
 import { Title } from "./title"
+import { DataGraphBar, GraphicBar } from "./graphics/bar"
 
 interface DataGraphicsByReasons {
     motivo: string,
@@ -19,6 +19,12 @@ interface DataGraphicsByReasons {
 interface DataGraphicsByBumberCallsWaitingTime {
     motivo: string,
     quantidade: number
+}
+
+interface DataGraphicsTimeWaitingAttendances {
+    tempo: number,
+    chamados: number,
+    departamentos: string
 }
 
 const headersCsv = {
@@ -33,7 +39,7 @@ const headersCsv = {
         { label: "Quinze", key: "quinze" },
         { label: "Vinte", key: "vinte" },
         { label: "Trinta", key: "trinta" },
-        { label: "Trinta ++", key: "maior" },
+        { label: "Trinta+", key: "maior" },
     ]
 }
 
@@ -49,8 +55,11 @@ const columnsGridByNumberCallsWaitingTime: GridColDef[] = [
     { field: "quinze", headerName: "Quinze", width: 91.666666667 },
     { field: "vinte", headerName: "Vinte", width: 91.666666667 },
     { field: "trinta", headerName: "Trinta", width: 91.666666667 },
-    { field: "maior", headerName: "Trinta ++", width: 91.666666667 }
+    { field: "maior", headerName: "Trinta +", width: 91.666666667 }
 ]
+
+/* `/call-time-by-department/${rota}?dateStart=${dateStart.value}&dateFinal=${dateFinal.value}`
+ */
 export function AttendanceByReason() {
     const [gestor, setGestor] = useState('')
     const [isFeching, setIsFeching] = useState<boolean>(false)
@@ -67,31 +76,50 @@ export function AttendanceByReason() {
     const [csvByBumberCallsWaitingTime, setCsvByBumberCallsWaitingTime] = useState<DataGraphicsByBumberCallsWaitingTime[]>(
         [{ motivo: "", quantidade: 0 }])
 
-
-    const handleChange = (event: KeyboardEvent<HTMLInputElement>) => {
-        const target = event.target as HTMLInputElement
-        setGestor(target.value)
-    }
+    const [dataTimeWaitingAttendances, setDataTimeWaitingAttendances] = useState<DataGraphBar>({
+        data: [],
+        description: "",
+        label: []
+    })
 
     useEffect(() => {
         async function loadAttendancesByReason() {
             setIsFeching(true)
-            await api.get<DataGraphicsByReasons[]>(`/attendance-reasons?gestor=${gestor}&dateStart=${dateStart}&dateFinal=${dateFinal}`)
+            await api.get<DataGraphicsTimeWaitingAttendances[]>(`/call-time-by-department/${gestor}?dateStart=${dateStart}&dateFinal=${dateFinal}`)
                 .then(response => {
                     if (response.data) {
-                        setListByReasons(response.data)
-                        setCsvByReasons(response.data)
+                        let label: String[] = []
+                        let dataSets: number[] = []
+
+                        response.data.map((data) => {
+                            label.push(data.departamentos)
+                            dataSets.push(data.tempo)
+                        })
+                        setDataTimeWaitingAttendances({
+                            data: dataSets,
+                            description: "Dados em minutos.",
+                            label: label
+                        })
                     }
-                })
+                }).catch(error => console.log(error))
+
 
             await api.get<DataGraphicsByBumberCallsWaitingTime[]>(`/attendance-number?gestor=${gestor}&dateStart=${dateStart}&dateFinal=${dateFinal}`)
                 .then(response => {
                     if (response.data) {
                         setListByBumberCallsWaitingTime(response.data)
                         setCsvByBumberCallsWaitingTime(response.data)
-                        setIsFeching(false)
                     }
-                })
+                }).catch(error => console.log(error))
+
+            await api.get<DataGraphicsByReasons[]>(`/attendance-reasons?gestor=${gestor}&dateStart=${dateStart}&dateFinal=${dateFinal}`)
+                .then(response => {
+                    if (response.data) {
+                        setListByReasons(response.data)
+                        setCsvByReasons(response.data)
+                    }
+                }).catch(error => console.log(error))
+            setIsFeching(false)
         }
         if (gestor !== '') {
             loadAttendancesByReason()
@@ -122,10 +150,34 @@ export function AttendanceByReason() {
 
             <Content>
                 {isFeching && <><Loading>Carregando...</Loading> <br /></>}
+
+                {dataTimeWaitingAttendances?.data.length > 0 && <>
+                    <Title style={{ display: "inline-block", padding: "20px", color: "#701ec7" }} title="Media de tempo por departamento:" />
+                    <ContentGraphics>
+                        <GraphicBar dataSets={dataTimeWaitingAttendances?.data} description={dataTimeWaitingAttendances?.description} labels={dataTimeWaitingAttendances?.label} />
+                    </ContentGraphics>
+                </>}
+
+                {listByBumberCallsWaitingTime?.length > 0 && <>
+                    <Title style={{ display: "inline-block", padding: "20px", color: "#701ec7" }} title="Quantidade de chamados por tempo médio:" />
+                    <CSVLink
+                        style={stylesGlobal.ButtonCsv}
+                        data={csvByBumberCallsWaitingTime}
+                        headers={headersCsv.numberCallsWaitingTime}>
+                        Baixar CSV
+                        <Icon className="fa fa-download" aria-hidden="true" />
+                    </CSVLink>
+                    <ContentGrid>
+                        <DataGrid
+                            rows={listByBumberCallsWaitingTime}
+                            columns={columnsGridByNumberCallsWaitingTime} />
+                    </ContentGrid>
+                </>}
+
                 {listByReasons?.length > 0 && <>
                     <Title style={{ display: "inline-block", padding: "20px", color: "#701ec7" }} title="Atendimentos por motivo:" />
                     <CSVLink
-                        style={stylesGlobal.Link}
+                        style={stylesGlobal.ButtonCsv}
                         data={csvByReasons}
                         headers={headersCsv.reasons}>
                         Baixar CSV
@@ -136,22 +188,6 @@ export function AttendanceByReason() {
                             initialState={{ sorting: { sortModel: [{ field: 'quantidade', sort: 'desc' }] } }}
                             rows={listByReasons}
                             columns={columnsGridByReason} />
-                    </ContentGrid>
-                </>}
-
-                {listByBumberCallsWaitingTime?.length > 0 && <>
-                    <Title style={{ display: "inline-block", padding: "20px", color: "#701ec7" }} title="Quantidade de chamados por tempo médio:" />
-                    <CSVLink
-                        style={stylesGlobal.Link}
-                        data={csvByBumberCallsWaitingTime}
-                        headers={headersCsv.numberCallsWaitingTime}>
-                        Baixar CSV
-                        <Icon className="fa fa-download" aria-hidden="true" />
-                    </CSVLink>
-                    <ContentGrid>
-                        <DataGrid
-                            rows={listByBumberCallsWaitingTime}
-                            columns={columnsGridByNumberCallsWaitingTime} />
                     </ContentGrid>
                 </>}
             </Content>
@@ -189,6 +225,14 @@ const ContentGrid = styled.div`
     color: gray;
     margin: 0 0 35px 0;
 `
+
+const ContentGraphics = styled.div`
+    box-shadow: 0 0rem 1rem hsl(0 0% 0% / 20%);
+    padding: 25px 2px 50px;
+    width: 800px;
+    margin: 0 0 20px 0;
+`
+
 const Loading = styled.span`
     color: #5e005e;
     padding: 25px;

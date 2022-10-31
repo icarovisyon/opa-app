@@ -1,9 +1,9 @@
-import { useEffect, useState, KeyboardEvent } from "react";
-import styled from "styled-components";
-import { InputDate, DateContent } from "../components/dateContent";
-import { GraphicBar } from "../components/graphics/bar";
-import { SideBar } from "../components/sideBar";
-import { api } from "../hooks/useEffect";
+import { useEffect, useState, KeyboardEvent } from "react"
+import styled from "styled-components"
+import { InputDate, DateContent } from "../components/dateContent"
+import { DataGraphBar, GraphicBar } from "../components/graphics/bar"
+import { SideBar } from "../components/sideBar"
+import { api } from "../hooks/useEffect"
 
 interface ListData {
     id: string,
@@ -20,7 +20,7 @@ interface Attendances {
     description: string
 }
 
-interface DataGraphics {
+interface DataAttendances {
     data: [{
         _id: {
             day: string,
@@ -29,12 +29,6 @@ interface DataGraphics {
         },
         count: number
     }]
-    description: string
-}
-
-interface DataGraph {
-    label: any[],
-    data: any[],
     description: string
 }
 
@@ -52,8 +46,8 @@ export function Attendance() {
     const [dateFinal, setDateFinal] = useState("2022-09-30")
     const [isSheach, setIsSheach] = useState<boolean>(false)
 
-    const [assumingData, setAssumingData] = useState<DataGraph>()
-    const [finishData, setFinishData] = useState<DataGraph>()
+    const [assumingData, setAssumingData] = useState<DataGraphBar>()
+    const [finishData, setFinishData] = useState<DataGraphBar>()
 
     useEffect(() => {
         async function loadDepartments() {
@@ -89,13 +83,13 @@ export function Attendance() {
     useEffect(() => {
         async function loadDataAttendant() {
             try {
-                await api.get<DataGraphics>(`/atendente-assuming?attendant=${attendant}&dateStart=${dateStart}&dateFinal=${dateFinal}`)
-                    .then(responseAssuming => {
-                        if (responseAssuming.data) {
+                await api.get<DataAttendances>(`/atendente-assuming?attendant=${attendant}&dateStart=${dateStart}&dateFinal=${dateFinal}`)
+                    .then(response => {
+                        if (response.data) {
                             let label: String[] = []
                             let dataSets: number[] = []
 
-                            responseAssuming.data.data.map((data) => {
+                            response.data.data.map((data) => {
                                 const date = dateFormat(data._id.day, data._id.month, data._id.year)
                                 label.push(date)
                                 dataSets.push(data.count)
@@ -103,19 +97,19 @@ export function Attendance() {
                             })
                             setAssumingData({
                                 data: dataSets,
-                                description: responseAssuming.data.description,
+                                description: response.data.description,
                                 label: label
                             })
                         }
                     })
 
-                await api.get<DataGraphics>(`/atendente-finished?attendant=${attendant}&dateStart=${dateStart}&dateFinal=${dateFinal}`)
-                    .then(responseFinish => {
-                        if (responseFinish.data) {
+                await api.get<DataAttendances>(`/atendente-finished?attendant=${attendant}&dateStart=${dateStart}&dateFinal=${dateFinal}`)
+                    .then(response => {
+                        if (response.data) {
                             let label: String[] = []
                             let dataSets: number[] = []
 
-                            responseFinish.data.data.map((data) => {
+                            response.data.data.map((data) => {
                                 const date = dateFormat(data._id.day, data._id.month, data._id.year)
                                 label.push(date)
                                 dataSets.push(data.count)
@@ -123,7 +117,7 @@ export function Attendance() {
                             })
                             setFinishData({
                                 data: dataSets,
-                                description: responseFinish.data.description,
+                                description: response.data.description,
                                 label: label
                             })
                         }
@@ -262,7 +256,7 @@ const Icon = styled.i`
 `
 const ContentGraphics = styled.div`
     padding: 25px 2px 50px;
-    max-width: 1800px;
+    max-width: 90vw;
 `
 const ProcessSheach = styled.button`
     width: 120px;

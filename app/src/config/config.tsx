@@ -29,5 +29,15 @@ export const stylesGlobal = {
         backgroundColor: "#8a58ff",
         color: "#fff",
         padding: "10px"
+    },
+    ButtonCsv: {
+        borderRadius: "10px",
+        backgroundColor: "#8a58ff",
+        color: "#fff",
+        padding: "8px",
+        hover: {
+            backgroundColor: "blue"
+        }
     }
+
 }
