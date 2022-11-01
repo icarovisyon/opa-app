@@ -1,4 +1,4 @@
-import { departmentSelect } from '../services/treatments.js'
+import { departmentSelect } from '../utils/utils.js'
 import service from '../services/departments.service.js'
 
 async function getDepartments(req, res) {

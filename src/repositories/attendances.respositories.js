@@ -44,7 +44,9 @@ async function attendancesByDepartment(departament, dateStart, dateFinal) {
             createdAt: 1,
             atendentes: 1,
             departartamento: 1,
-            fim: 1
+            fim: 1,
+            ultimaTransferencia: 1,
+            ultimaTransferenciaFilaDepartamento: 1
         }).lean().exec()
         await conn.close()
         return response
@@ -72,7 +74,7 @@ async function totalAttendancesAll(dateStart, dateFinal) {
 }
 
 
-async function attendancesByReason(reason, dateStart, dateFinal, departament) {
+async function countAttendancesByReason(reason, dateStart, dateFinal, departament) {
     try {
         const conn = mongoose.createConnection('mongodb://localhost:27017/suite_opa')
         const atendimento = conn.model('atendimentos', model.atendimentos)
@@ -91,4 +93,34 @@ async function attendancesByReason(reason, dateStart, dateFinal, departament) {
     }
 }
 
-export default { attendancesAll, attendancesByDepartment, totalAttendancesAll, attendancesByReason }
+async function attendancesByReason(reason, dateStart, dateFinal, departament) {
+    try {
+        const conn = mongoose.createConnection('mongodb://localhost:27017/suite_opa')
+        const atendimento = conn.model('atendimentos', model.atendimentos)
+
+        const response = await atendimento.find({
+            fim: {
+                $gt: new Date(dateStart), $lt: new Date(dateFinal),
+            },
+            id_motivo_atendimento: reason,
+            setor: departament,
+            status: "F"
+        }, {
+            _id: 1,
+            fim: 1,
+            atendentes: 1
+        }).lean().exec()
+        await conn.close()
+        return response
+    } catch (error) {
+        return false
+    }
+}
+
+export default {
+    attendancesAll,
+    attendancesByDepartment,
+    totalAttendancesAll,
+    countAttendancesByReason,
+    attendancesByReason
+}

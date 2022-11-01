@@ -34,10 +34,12 @@ export const stylesGlobal = {
         borderRadius: "10px",
         backgroundColor: "#8a58ff",
         color: "#fff",
-        padding: "8px",
-        hover: {
-            backgroundColor: "blue"
-        }
+        padding: "8px"
+    },
+    Title: {
+        display: "inline-block",
+        padding: "20px",
+        color: "#701ec7"
     }
 
 }

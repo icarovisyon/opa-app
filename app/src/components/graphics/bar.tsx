@@ -31,6 +31,11 @@ export const options = {
     },
 };
 
+export const defaultValuesGraphicBar = {
+    data: [],
+    description: "",
+    label: []
+}
 
 interface GraphicBarProps {
     labels: any[] | undefined,

@@ -1,6 +1,6 @@
 import Consult from '../repositories/attendances.respositories.js'
-import { calMinutsDiferenceDate, departmentSelect } from './treatments.js'
-import reason from '../repositories/reasonByAttendances.js'
+import { calMinutsDiferenceDate, departmentSelect } from '../utils/utils.js'
+import reason from '../repositories/reasons.repositories.js'
 
 async function timeAttendancesDepartment(departament, dateStart, dateFinal) {
     try {
@@ -48,8 +48,10 @@ async function timeAttendancesDepartment(departament, dateStart, dateFinal) {
         })
         return data
     } catch (err) {
-        console.log(err)
-        return false
+        return {
+            error: true,
+            message: err
+        }
     }
 }
 
@@ -70,8 +72,10 @@ async function timeAttendancesAll(dateStart, dateFinal) {
             departamentos: "todos"
         }
     } catch (err) {
-        console.log(err)
-        return false
+        return {
+            error: true,
+            message: err
+        }
     }
 }
 
@@ -99,8 +103,10 @@ async function totalAttendancesAll(dateStart, dateFinal) {
             semInteracao: countNotInteraction
         }
     } catch (err) {
-        console.log(err)
-        return false
+        return {
+            error: true,
+            message: err
+        }
     }
 }
 
@@ -115,7 +121,7 @@ async function attendancesByReason(manager, dateStart, dateFinal) {
             const reasons = await reason.reasonsByDepartment(departments[department].id)
 
             for (const reason in reasons) {
-                const countAttendances = await Consult.attendancesByReason(
+                const countAttendances = await Consult.countAttendancesByReason(
                     reasons[reason]._id,
                     dateStart,
                     dateFinal,
@@ -133,8 +139,10 @@ async function attendancesByReason(manager, dateStart, dateFinal) {
         }
         return data
     } catch (err) {
-        console.log(err)
-        return false
+        return {
+            error: true,
+            message: err
+        }
     }
 }
 
@@ -186,7 +194,7 @@ async function numberAttendancesByTime(departament, dateStart, dateFinal) {
                     if (timeMinuts > 21 && timeMinuts < 31) {
                         minuts30 += 1
                     }
-                    if (timeMinuts > 31) {
+                    if (timeMinuts > 31 && timeMinuts < 90) {
                         minutsGreater30 += 1
                     }
                 }
@@ -205,8 +213,59 @@ async function numberAttendancesByTime(departament, dateStart, dateFinal) {
 
         return data
     } catch (err) {
+        return {
+            error: true,
+            message: err
+        }
+    }
+}
+
+async function timeOfCallsByReason(manager, dateStart, dateFinal) {
+    try {
+        if (dateStart == "" || dateStart == undefined || dateFinal == "" || dateFinal == undefined) {
+            return {
+                type: "error",
+                message: "Preencha um periodo de datas!"
+            }
+        }
+        const departments = departmentSelect(manager)
+        let data = []
+        let id = 0
+        for (const department in departments) {
+            const reasons = await reason.reasonsByDepartment(departments[department].id)
+            for (const reason in reasons) {
+                let timeMinuts = 0
+                let count = 0
+                const attendances = await Consult.attendancesByReason(
+                    reasons[reason]._id,
+                    dateStart,
+                    dateFinal,
+                    departments[department].id
+                )
+                for (const attendance in attendances) {
+                    if (attendances[attendance].atendentes) {
+                        const teste = attendances[attendance].atendentes.length
+                        timeMinuts += calMinutsDiferenceDate(attendances[attendance].fim, attendances[attendance].atendentes[teste - 1].inicio)
+                        count++
+                    }
+                }
+                if (timeMinuts > 0) {
+                    data.push({
+                        id: id++,
+                        media: (timeMinuts / 60 / count).toFixed(2), // media em horas
+                        chamados: count,
+                        motivo: reasons[reason].motivo
+                    })
+                }
+            }
+        }
+        return data
+    } catch (err) {
         console.log(err)
-        return false
+        return {
+            error: true,
+            message: err
+        }
     }
 }
 
@@ -215,5 +274,6 @@ export default {
     timeAttendancesDepartment,
     totalAttendancesAll,
     attendancesByReason,
-    numberAttendancesByTime
+    numberAttendancesByTime,
+    timeOfCallsByReason
 }

@@ -32,5 +32,11 @@ async function getnumberAttendancesByTime(req, res) {
     return res.status(200).json(response)
 }
 
+async function getTimeOfCallsByReason(req, res) {
+    const { dateStart, dateFinal, gestor } = req.query
+    const response = await service.timeOfCallsByReason(gestor, dateStart, dateFinal)
+    return res.status(200).json(response)
+}
 
-export default { getTimeAttendancesAll, getAttendances, getTotalAttendancesAll, getAttendancesByReason, getnumberAttendancesByTime }
+
+export default { getTimeAttendancesAll, getAttendances, getTotalAttendancesAll, getAttendancesByReason, getnumberAttendancesByTime, getTimeOfCallsByReason }

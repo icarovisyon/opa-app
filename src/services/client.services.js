@@ -2,7 +2,7 @@ import Consult from '../repositories/client.repositories.js'
 import tags from '../repositories/tags.repositories.js'
 
 import listClients from '../file/clients.json' assert { type: "json" }
-import { groupBy, orderBy } from './treatments.js'
+import { groupBy, orderBy } from '../utils/utils.js'
 
 async function clientTags(name) {
     try {
