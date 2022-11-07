@@ -3,7 +3,7 @@ import { DataGrid, GridRowsProp, GridColDef } from "@mui/x-data-grid"
 import styled from "styled-components"
 import { api } from "../hooks/useEffect"
 import { Sheach } from "./sheach"
-import { defaultGrid, stylesGlobal } from "../config/config"
+import { dateFilterDefaul, defaultGrid, stylesGlobal } from "../config/config"
 import { Description } from "./Description"
 import { DateContent, InputDate } from "./dateContent"
 import { Button } from "./Button"
@@ -38,7 +38,8 @@ const headersCsv = {
     ],
     callTimeMediumByReason: [
         { label: "Motivo", key: "motivo" },
-        { label: "Media", key: "media" }
+        { label: "Media", key: "media" },
+        { label: "Departamento", key: "departamento" }
     ]
 }
 
@@ -58,16 +59,17 @@ const columnsGridByNumberCallsWaitingTime: GridColDef[] = [
 ]
 
 const columnsGridCallTimeMediumByReason: GridColDef[] = [
-    { field: "motivo", headerName: "Motivo", width: 400 },
-    { field: "media", headerName: "media de tempo em horas", width: 300 }
+    { field: "departamento", headerName: "Departamento", width: 260 },
+    { field: "motivo", headerName: "Motivo", width: 260 },
+    { field: "media", headerName: "media de tempo em horas", width: 210 }
 ]
 
 export function AttendanceByReason() {
     const [gestor, setGestor] = useState('')
     const [isFeching, setIsFeching] = useState<boolean>(false)
 
-    const [dateStart, setDateStart] = useState("2022-09-01")
-    const [dateFinal, setDateFinal] = useState("2022-09-30")
+    const [dateStart, setDateStart] = useState(dateFilterDefaul.startDate)
+    const [dateFinal, setDateFinal] = useState(dateFilterDefaul.finalDate)
 
     const [reload, setReload] = useState(true)
 

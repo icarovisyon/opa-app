@@ -1,4 +1,6 @@
+import * as dotenv from 'dotenv'
+dotenv.config()
 import mongoose from 'mongoose';
-await mongoose.connect('mongodb://localhost:27017/suite_opa')
+await mongoose.connect(process.env.URL_MONGO)
 
 export { mongoose }

@@ -6,7 +6,7 @@ const ObjectId = mongoose.Types.ObjectId
 
 async function userDepartments(department) {
     try {
-        const conn = mongoose.createConnection('mongodb://localhost:27017/suite_opa')
+        const conn = mongoose.createConnection(process.env.URL_MONGO)
         const departamentos_usuarios = conn.model('departamentos_usuarios', model.departamentosUsuarios)
 
         const response = await departamentos_usuarios.find({

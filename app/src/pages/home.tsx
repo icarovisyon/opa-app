@@ -34,7 +34,7 @@ export function Homepage() {
             <SideBar selected="Dashboard" />
             <Content>
                 <Title title="Indicadores:" />
-                <Text description="Periodo: 09/2022" />
+                <Text description="Periodo: 10/2022" />
                 <ContentCards>
                     <Cards className="animated">
                         <DescriptionCard>Tempo Médio na fila:</DescriptionCard>

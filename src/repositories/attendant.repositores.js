@@ -5,7 +5,7 @@ const ObjectId = mongoose.Types.ObjectId
 
 async function attendantCountDaysAssuming(attendant, dateStart, dateFinal) {
     try {
-        const conn = mongoose.createConnection('mongodb://localhost:27017/suite_opa')
+        const conn = mongoose.createConnection(process.env.URL_MONGO)
         const atendimento = conn.model('atendimentos', model.atendimentos)
 
         const response = await atendimento.aggregate([
@@ -40,7 +40,7 @@ async function attendantCountDaysAssuming(attendant, dateStart, dateFinal) {
 }
 async function attendantCountDaysFinished(attendant, dateStart, dateFinal) {
     try {
-        const conn = mongoose.createConnection('mongodb://localhost:27017/suite_opa')
+        const conn = mongoose.createConnection(process.env.URL_MONGO)
         const atendimento = conn.model('atendimentos', model.atendimentos)
 
         const response = await atendimento.aggregate([
@@ -75,7 +75,7 @@ async function attendantCountDaysFinished(attendant, dateStart, dateFinal) {
 
 async function user(id) {
     try {
-        const conn = mongoose.createConnection('mongodb://localhost:27017/suite_opa')
+        const conn = mongoose.createConnection(process.env.URL_MONGO)
         const user = conn.model('usuarios', model.usuario)
 
         const response = await user.find({

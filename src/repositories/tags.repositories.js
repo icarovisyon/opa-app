@@ -5,7 +5,7 @@ import { mongoose } from '../db/db.js'
 
 async function tagOnly(tag) {
     try {
-        const conn = mongoose.createConnection('mongodb://localhost:27017/suite_opa')
+        const conn = mongoose.createConnection(process.env.URL_MONGO)
         const tags = conn.model('tags', model.tags)
 
         const response = await tags.find({

@@ -3,7 +3,7 @@ import { mongoose } from '../db/db.js'
 
 async function clients() {
     try {
-        const conn = mongoose.createConnection('mongodb://localhost:27017/suite_opa')
+        const conn = mongoose.createConnection(process.env.URL_MONGO)
         const clients = conn.model('clientes', model.cliente)
 
         const response = await clients.find({
@@ -23,7 +23,7 @@ async function clients() {
 
 async function clientsTag(tag) {
     try {
-        const conn = mongoose.createConnection('mongodb://localhost:27017/suite_opa')
+        const conn = mongoose.createConnection(process.env.URL_MONGO)
         const clients = conn.model('clientes', model.cliente)
 
         const response = await clients.find({
@@ -44,7 +44,7 @@ async function clientsTag(tag) {
 
 async function evaluationClient(dateStart, dateFinal) {
     try {
-        const conn = mongoose.createConnection('mongodb://localhost:27017/suite_opa')
+        const conn = mongoose.createConnection(process.env.URL_MONGO)
         const atendimento = conn.model('atendimentos', model.atendimentos)
         const response = await atendimento.aggregate()
             .match({

@@ -4,7 +4,7 @@ import { mongoose } from '../db/db.js'
 
 async function reasonsByDepartment(department) {
     try {
-        const conn = mongoose.createConnection('mongodb://localhost:27017/suite_opa')
+        const conn = mongoose.createConnection(process.env.URL_MONGO)
         const reasons = conn.model('motivo_atendimentos', model.motivoAtendimentos)
 
         const response = await reasons.find({

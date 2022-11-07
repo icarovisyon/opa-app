@@ -3,7 +3,7 @@ import { mongoose } from '../db/db.js'
 
 async function attendancesAll(dateStart, dateFinal) {
     try {
-        const conn = mongoose.createConnection('mongodb://localhost:27017/suite_opa')
+        const conn = mongoose.createConnection(process.env.URL_MONGO)
         const atendimento = conn.model('atendimentos', model.atendimentos)
         const response = await atendimento.find({
             createdAt: {
@@ -30,7 +30,7 @@ async function attendancesAll(dateStart, dateFinal) {
 
 async function attendancesByDepartment(departament, dateStart, dateFinal) {
     try {
-        const conn = mongoose.createConnection('mongodb://localhost:27017/suite_opa')
+        const conn = mongoose.createConnection(process.env.URL_MONGO)
         const atendimento = conn.model('atendimentos', model.atendimentos)
 
         const response = await atendimento.find({
@@ -57,7 +57,7 @@ async function attendancesByDepartment(departament, dateStart, dateFinal) {
 
 async function totalAttendancesAll(dateStart, dateFinal) {
     try {
-        const conn = mongoose.createConnection('mongodb://localhost:27017/suite_opa')
+        const conn = mongoose.createConnection(process.env.URL_MONGO)
         const atendimento = conn.model('atendimentos', model.atendimentos)
 
         const response = await atendimento.find({
@@ -76,7 +76,7 @@ async function totalAttendancesAll(dateStart, dateFinal) {
 
 async function countAttendancesByReason(reason, dateStart, dateFinal, departament) {
     try {
-        const conn = mongoose.createConnection('mongodb://localhost:27017/suite_opa')
+        const conn = mongoose.createConnection(process.env.URL_MONGO)
         const atendimento = conn.model('atendimentos', model.atendimentos)
 
         const response = await atendimento.find({
@@ -95,7 +95,7 @@ async function countAttendancesByReason(reason, dateStart, dateFinal, departamen
 
 async function attendancesByReason(reason, dateStart, dateFinal, departament) {
     try {
-        const conn = mongoose.createConnection('mongodb://localhost:27017/suite_opa')
+        const conn = mongoose.createConnection(process.env.URL_MONGO)
         const atendimento = conn.model('atendimentos', model.atendimentos)
 
         const response = await atendimento.find({

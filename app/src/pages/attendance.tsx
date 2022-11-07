@@ -3,6 +3,7 @@ import styled from "styled-components"
 import { InputDate, DateContent } from "../components/dateContent"
 import { DataGraphBar, GraphicBar } from "../components/graphics/bar"
 import { SideBar } from "../components/sideBar"
+import { dateFilterDefaul } from "../config/config"
 import { api } from "../hooks/useEffect"
 
 interface ListData {
@@ -42,8 +43,8 @@ export function Attendance() {
     const [listAttendant, setListAttendant] = useState<ListData[]>()
     const [setor, setSetor] = useState("")
     const [attendant, setAttendant] = useState("")
-    const [dateStart, setDateStart] = useState("2022-09-01")
-    const [dateFinal, setDateFinal] = useState("2022-09-30")
+    const [dateStart, setDateStart] = useState(dateFilterDefaul.startDate)
+    const [dateFinal, setDateFinal] = useState(dateFilterDefaul.finalDate)
     const [isSheach, setIsSheach] = useState<boolean>(false)
 
     const [assumingData, setAssumingData] = useState<DataGraphBar>()

@@ -252,9 +252,10 @@ async function timeOfCallsByReason(manager, dateStart, dateFinal) {
                 if (timeMinuts > 0) {
                     data.push({
                         id: id++,
-                        media: (timeMinuts / 60 / count).toFixed(2), // media em horas
+                        media: (timeMinuts / 60 / count).toFixed(2), //media em horas
                         chamados: count,
-                        motivo: reasons[reason].motivo
+                        motivo: reasons[reason].motivo,
+                        departamento: departments[department].name
                     })
                 }
             }
