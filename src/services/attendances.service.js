@@ -1,5 +1,5 @@
 import Consult from '../repositories/attendances.respositories.js'
-import { calMinutsDiferenceDate, departmentSelect } from '../utils/utils.js'
+import { calMinutsDiferenceDate, departmentSelect, timeLimiter } from '../utils/utils.js'
 import reason from '../repositories/reasons.repositories.js'
 
 async function timeAttendancesDepartment(departament, dateStart, dateFinal) {
@@ -19,31 +19,43 @@ async function timeAttendancesDepartment(departament, dateStart, dateFinal) {
         }
         let data = []
         let minutsAll = 0
-        let totalAmount = 0
+        let totalCount = 0
+
 
         for (const department in departmentSelected) {
             let timeMinuts = 0
+            let count = 0
 
             let response = await Consult.attendancesByDepartment(departmentSelected[department].id, dateStart, dateFinal)
 
             for (const attendance in response) {
                 if (response[attendance].atendentes[0]) {
-                    timeMinuts += calMinutsDiferenceDate(response[attendance].atendentes[0].inicio, response[attendance].createdAt);
+
+                    const createdDate = new Date(response[attendance].createdAt)
+                    const assumeDate = new Date(response[attendance].atendentes[0].inicio)
+
+                    if (timeLimiter(createdDate.getHours(), createdDate.getMinutes())) {
+                        let minuts = calMinutsDiferenceDate(assumeDate, createdDate);
+                        if (minuts < 120) {
+                            timeMinuts += minuts
+                            count++
+                            totalCount++
+                        }
+                    }
                 }
             }
-            totalAmount += response.length
-            const averageTime = timeMinuts / response.length
+            const averageTime = timeMinuts / count++
             data.push({
                 tempo: averageTime.toFixed(2),
-                chamados: response.length,
+                chamados: count,
                 departamentos: departmentSelected[department].name
             })
             minutsAll += timeMinuts
         }
-        const averageTimeAll = minutsAll / totalAmount
+        const averageTimeAll = minutsAll / totalCount
         data.push({
             tempo: averageTimeAll.toFixed(2),
-            chamados: totalAmount,
+            chamados: totalCount,
             departamentos: "Todos departamentos"
         })
         return data
@@ -59,19 +71,30 @@ async function timeAttendancesAll(dateStart, dateFinal) {
     try {
         const response = await Consult.attendancesAll(dateStart, dateFinal)
         let timeMinuts = 0
+        let count = 0
 
         for (const data in response) {
             if (response[data].atendentes[0]) {
-                timeMinuts += calMinutsDiferenceDate(response[data].atendentes[0].inicio, response[data].createdAt)
+                const createdDate = new Date(response[data].createdAt)
+                const assumeDate = new Date(response[data].atendentes[0].inicio)
+
+                if (timeLimiter(createdDate.getHours(), createdDate.getMinutes())) {
+                    let minuts = calMinutsDiferenceDate(assumeDate, createdDate);
+                    if (minuts < 120) {
+                        timeMinuts += minuts
+                        count++;
+                    }
+                }
             }
         }
-        const averageTime = timeMinuts / response.length
+        const averageTime = timeMinuts / count++
         return {
             tempo: averageTime.toFixed(2),
-            chamados: response.length,
+            chamados: count,
             departamentos: "todos"
         }
     } catch (err) {
+        console.log(err)
         return {
             error: true,
             message: err
@@ -177,25 +200,31 @@ async function numberAttendancesByTime(departament, dateStart, dateFinal) {
 
             for (const attendance in response) {
                 if (response[attendance].atendentes[0]) {
-                    let timeMinuts = calMinutsDiferenceDate(response[attendance].atendentes[0].inicio, response[attendance].createdAt)
 
-                    if (timeMinuts < 6) {
-                        minuts5 += 1
-                    }
-                    if (timeMinuts > 5 && timeMinuts < 11) {
-                        minuts10 += 1
-                    }
-                    if (timeMinuts > 11 && timeMinuts < 16) {
-                        minuts15 += 1
-                    }
-                    if (timeMinuts > 16 && timeMinuts < 21) {
-                        minuts20 += 1
-                    }
-                    if (timeMinuts > 21 && timeMinuts < 31) {
-                        minuts30 += 1
-                    }
-                    if (timeMinuts > 31 && timeMinuts < 90) {
-                        minutsGreater30 += 1
+                    const startDate = new Date(response[attendance].createdAt)
+                    const assumeDate = new Date(response[attendance].atendentes[0].inicio)
+
+                    if (timeLimiter(startDate.getHours(), startDate.getMinutes())) {
+                        let timeMinuts = calMinutsDiferenceDate(assumeDate, startDate)
+
+                        if (timeMinuts < 6) {
+                            minuts5 += 1
+                        }
+                        if (timeMinuts > 5 && timeMinuts < 11) {
+                            minuts10 += 1
+                        }
+                        if (timeMinuts > 11 && timeMinuts < 16) {
+                            minuts15 += 1
+                        }
+                        if (timeMinuts > 16 && timeMinuts < 21) {
+                            minuts20 += 1
+                        }
+                        if (timeMinuts > 21 && timeMinuts < 31) {
+                            minuts30 += 1
+                        }
+                        if (timeMinuts > 31 && timeMinuts < 120) {
+                            minutsGreater30 += 1
+                        }
                     }
                 }
             }
@@ -244,8 +273,15 @@ async function timeOfCallsByReason(manager, dateStart, dateFinal) {
                 )
                 for (const attendance in attendances) {
                     if (attendances[attendance].atendentes) {
-                        const teste = attendances[attendance].atendentes.length
-                        timeMinuts += calMinutsDiferenceDate(attendances[attendance].fim, attendances[attendance].atendentes[teste - 1].inicio)
+
+                        const index = attendances[attendance].atendentes.length - 1
+                        const dateFinal = new Date(attendances[attendance].fim)
+                        const dateStart = new Date(attendances[attendance].atendentes[index].inicio)
+
+                        timeMinuts += calMinutsDiferenceDate(
+                            dateFinal,
+                            dateStart
+                        )
                         count++
                     }
                 }
@@ -270,11 +306,49 @@ async function timeOfCallsByReason(manager, dateStart, dateFinal) {
     }
 }
 
+async function numberOfCallsHours(dateStart, dateFinal, manager) {
+    try {
+        if (dateStart == "" || dateStart == undefined || dateFinal == "" || dateFinal == undefined) {
+            return {
+                type: "error",
+                message: "Preencha um periodo de datas!"
+            }
+        }
+        const data = []
+
+        const departments = departmentSelect(manager)
+        for (const department in departments) {
+
+            const attendances = await Consult.numberOfCallsHours(dateStart, dateFinal, departments[department].id)
+            const teste = []
+            attendances.map(attendace => {
+                teste.push({
+                    hora: attendace._id.hour,
+                    dia: attendace._id.day,
+                    mes: attendace._id.month,
+                    ano: attendace._id.year,
+                    quantidade: attendace.count
+                })
+            })
+            data.push({
+                departamento: departments[department].name,
+                data: teste
+            })
+
+        }
+
+        return data
+    } catch (error) {
+        console.log(error)
+    }
+}
+
 export default {
     timeAttendancesAll,
     timeAttendancesDepartment,
     totalAttendancesAll,
     attendancesByReason,
     numberAttendancesByTime,
-    timeOfCallsByReason
+    timeOfCallsByReason,
+    numberOfCallsHours
 }

@@ -33,10 +33,6 @@ interface DataAttendances {
     description: string
 }
 
-function dateFormat(day: string, month: string, year: string) {
-    return new Date(year + "-" + month + "-" + day).toLocaleDateString('pt-BR')
-}
-
 export function Attendance() {
     const [gestor, setGestor] = useState('')
     const [listSetor, setListSetor] = useState<ListData[]>()
@@ -112,6 +108,8 @@ export function Attendance() {
 
                             response.data.data.map((data) => {
                                 const date = dateFormat(data._id.day, data._id.month, data._id.year)
+                                console.log(data._id.day)
+                                console.log(date)
                                 label.push(date)
                                 dataSets.push(data.count)
 
@@ -178,11 +176,11 @@ export function Attendance() {
                     Pesquisar
                 </ProcessSheach>
                 <ContentGraphics>
-                    {/*                   {assumingData?.data && <GraphicBar
+                    {assumingData?.data && <GraphicBar
                         dataSets={assumingData?.data}
                         description={assumingData?.description}
                         labels={assumingData?.label} />
-                    } */}
+                    }
                     {finishData?.data && <GraphicBar
                         dataSets={finishData?.data}
                         description={finishData?.description}
@@ -257,7 +255,7 @@ const Icon = styled.i`
 `
 const ContentGraphics = styled.div`
     padding: 25px 2px 50px;
-    max-width: 90vw;
+    max-width: 2000px;
 `
 const ProcessSheach = styled.button`
     width: 120px;

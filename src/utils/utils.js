@@ -7,10 +7,19 @@ import departments from "../config/department.js"
  * @returns diferanca_em_minutos
  */
 function calMinutsDiferenceDate(dateOne, dateTwo) {
-    var minuts = (new Date(dateOne) - new Date(dateTwo)) / 1000 / 60  //minutos
+    var minuts = (dateOne - dateTwo) / 1000 / 60  //minutos
     return minuts
 }
 
+function timeLimiter(hours, minuts) {
+    if (hours >= 8 && hours <= 18) {
+        if (hours == 18 && minuts > 30) {
+            return false
+        }
+        return true
+    }
+    return false
+}
 
 function departmentSelect(select) {
     if (select == "Pamela" || select == "pamela") {
@@ -47,4 +56,10 @@ function orderBy(a, b) {
     return a.media > b.media ? 1 : a.media < b.media ? -1 : 0;
 }
 
-export { calMinutsDiferenceDate, departmentSelect, groupBy, orderBy }
+export {
+    calMinutsDiferenceDate,
+    departmentSelect,
+    groupBy,
+    orderBy,
+    timeLimiter
+}

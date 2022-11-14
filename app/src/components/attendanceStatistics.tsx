@@ -96,7 +96,7 @@ export function AttendanceByReason() {
                         let dataSets: number[] = []
 
                         response.data.map((data) => {
-                            label.push(data.departamentos)
+                            label.push(`${data.departamentos}, quant: ${data.chamados}`)
                             dataSets.push(data.tempo)
                         })
                         setDataTimeWaitingAttendances({

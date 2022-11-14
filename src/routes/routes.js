@@ -13,6 +13,7 @@ router.get('/attendance-statistics', attedances.getTotalAttendancesAll)
 router.get('/attendance-reasons', attedances.getAttendancesByReason)
 router.get('/attendance-number', attedances.getnumberAttendancesByTime)
 router.get('/call-time-medium-reasons', attedances.getTimeOfCallsByReason)
+router.get('/number-call-by-hours', attedances.getNumberOfCallsHours)
 
 
 router.get('/departments', departments.getDepartments)

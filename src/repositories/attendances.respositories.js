@@ -1,5 +1,6 @@
 import model from '../models/models.js'
 import { mongoose } from '../db/db.js'
+const ObjectId = mongoose.Types.ObjectId
 
 async function attendancesAll(dateStart, dateFinal) {
     try {
@@ -20,10 +21,6 @@ async function attendancesAll(dateStart, dateFinal) {
         await conn.close()
         return response
     } catch (error) {
-        const teste = await attendancesAll()
-        if (teste) {
-            return teste
-        }
         return false
     }
 }
@@ -84,7 +81,7 @@ async function countAttendancesByReason(reason, dateStart, dateFinal, departamen
                 $gt: new Date(dateStart), $lt: new Date(dateFinal),
             },
             id_motivo_atendimento: reason,
-            setor: departament
+            setor: ObjectId(departament)
         }).count()
         await conn.close()
         return response
@@ -117,10 +114,56 @@ async function attendancesByReason(reason, dateStart, dateFinal, departament) {
     }
 }
 
+async function numberOfCallsHours(dateStart, dateFinal, departament) {
+    try {
+
+        const conn = mongoose.createConnection(process.env.URL_MONGO)
+        const atendimento = conn.model('atendimentos', model.atendimentos)
+
+        const response = await atendimento.aggregate([
+            {
+                $match: {
+                    inicio: {
+                        $gt: new Date(dateStart), $lt: new Date(dateFinal),
+                    },
+                    canal: { $ne: "pabx" },
+                    setor: ObjectId(departament),
+                }
+            },
+            {
+                $project: {
+                    hour: { $hour: "$inicio" },
+                    day: { $dayOfMonth: "$inicio" },
+                    month: { $month: "$inicio" },
+                    year: { $year: "$inicio" }
+                }
+            },
+            {
+                $group: {
+                    _id: {
+                        hour: "$hour",
+                        day: "$day",
+                        month: "$month",
+                        year: "$year"
+                    },
+                    count: { $sum: 1 }
+                }
+            },
+            {
+                $sort: { _id: 1 }
+            }
+        ])
+        return response
+    } catch (error) {
+        console.log(error)
+    }
+}
+
 export default {
     attendancesAll,
     attendancesByDepartment,
     totalAttendancesAll,
     countAttendancesByReason,
-    attendancesByReason
+    attendancesByReason,
+    numberOfCallsHours
 }

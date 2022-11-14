@@ -11,8 +11,9 @@ async function attendantCountDaysAssuming(attendant, dateStart, dateFinal) {
         const response = await atendimento.aggregate([
             {
                 $match: {
-                    "atendentes.0.inicio": {
-                        $gt: new Date(dateStart), $lt: new Date(dateFinal),
+                    ultimaTransferencia: {
+                        $gt: new Date(dateStart),
+                        $lt: new Date(dateFinal)
                     },
                     id_atendente: ObjectId(attendant),
                     canal: { $ne: "pabx" }
@@ -20,12 +21,20 @@ async function attendantCountDaysAssuming(attendant, dateStart, dateFinal) {
             },
             {
                 $project: {
-                    day: { $dayOfMonth: "$atendentes[0]inicio" },
-                    month: { $month: "$inicio" },
-                    year: { $year: "$inicio" }
+                    day: { $dayOfMonth: "$ultimaTransferencia" },
+                    month: { $month: "$ultimaTransferencia" },
+                    year: { $year: "$ultimaTransferencia" }
                 }
             },
-            { $group: { _id: { day: "$day", month: "$month", year: "$year", atendente: "$atendente" }, count: { $sum: 1 } } },
+            {
+                $group: {
+                    _id: {
+                        day: "$day",
+                        month: "$month",
+                        year: "$year", atendente: "$atendente"
+                    }, count: { $sum: 1 }
+                }
+            },
             {
                 $sort: { _id: 1 }
             }
@@ -36,7 +45,7 @@ async function attendantCountDaysAssuming(attendant, dateStart, dateFinal) {
         console.log(error)
         return false
     }
-
+    dafeads
 }
 async function attendantCountDaysFinished(attendant, dateStart, dateFinal) {
     try {
@@ -50,7 +59,8 @@ async function attendantCountDaysFinished(attendant, dateStart, dateFinal) {
                         $gt: new Date(dateStart), $lt: new Date(dateFinal),
                     },
                     id_atendente: ObjectId(attendant),
-                    canal: { $ne: "pabx" }
+                    canal: { $ne: "pabx" },
+                    status: "F"
                 }
             },
             {
@@ -60,7 +70,16 @@ async function attendantCountDaysFinished(attendant, dateStart, dateFinal) {
                     year: { $year: "$fim" }
                 }
             },
-            { $group: { _id: { day: "$day", month: "$month", year: "$year" }, count: { $sum: 1 } } },
+            {
+                $group: {
+                    _id: {
+                        day: "$day",
+                        month: "$month",
+                        year: "$year"
+                    },
+                    count: { $sum: 1 }
+                }
+            },
             {
                 $sort: { _id: 1 }
             }
@@ -90,4 +109,9 @@ async function user(id) {
     }
 }
 
-export default { attendantCountDaysAssuming, attendantCountDaysFinished, user }
+export default {
+    attendantCountDaysAssuming,
+    attendantCountDaysFinished,
+    user
+}
+
