@@ -315,6 +315,7 @@ async function numberOfCallsHours(dateStart, dateFinal, manager) {
             }
         }
         const data = []
+        let id = 1
 
         const departments = departmentSelect(manager)
         for (const department in departments) {
@@ -323,6 +324,7 @@ async function numberOfCallsHours(dateStart, dateFinal, manager) {
             const teste = []
             attendances.map(attendace => {
                 teste.push({
+                    id: id++,
                     hora: attendace._id.hour,
                     dia: attendace._id.day,
                     mes: attendace._id.month,
