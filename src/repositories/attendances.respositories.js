@@ -1,6 +1,9 @@
 import model from '../models/models.js'
 import { mongoose } from '../db/db.js'
 const ObjectId = mongoose.Types.ObjectId
+import messages from '../file/attendances.json' assert { type: "json" }
+import fs from 'fs'
+import client from './client.repositories.js'
 
 async function attendancesAll(dateStart, dateFinal) {
     try {
@@ -131,20 +134,20 @@ async function numberOfCallsHours(dateStart, dateFinal, departament) {
                 }
             },
             {
-                $project: {
-                    hour: { $hour: "$inicio" },
-                    day: { $dayOfMonth: "$inicio" },
-                    month: { $month: "$inicio" },
-                    year: { $year: "$inicio" }
-                }
-            },
-            {
                 $group: {
                     _id: {
-                        hour: "$hour",
-                        day: "$day",
-                        month: "$month",
-                        year: "$year"
+                        hora: {
+                            $dateToString: { format: "%H", date: "$inicio", timezone: '-0300' },
+                        },
+                        dia: {
+                            $dateToString: { format: "%d", date: "$inicio", timezone: '-0300' },
+                        },
+                        mes: {
+                            $dateToString: { format: "%m", date: "$inicio", timezone: '-0300' },
+                        },
+                        ano: {
+                            $dateToString: { format: "%Y", date: "$inicio", timezone: '-0300' },
+                        }
                     },
                     count: { $sum: 1 }
                 }
@@ -159,11 +162,42 @@ async function numberOfCallsHours(dateStart, dateFinal, departament) {
     }
 }
 
+async function attendancesById() {
+    try {
+        const conn = mongoose.createConnection(process.env.URL_MONGO)
+        const atendimento = conn.model('atendimentos', model.atendimentos)
+        const attendances = []
+        const data = []
+
+        for (const message in messages) {
+            const response = await atendimento.find({
+                _id: ObjectId(messages[message].id_rota)
+            }, {
+                id_cliente: 1,
+                protocolo: 1
+            }).lean().exec()
+            attendances.push(response[0])
+
+        }
+
+        fs.writeFile('arquivo.json', JSON.stringify(attendances), (err) => {
+            if (err) throw err;
+            console.log('O arquivo foi criado!');
+        });
+        await conn.close()
+        return
+    } catch (error) {
+        console.log(error)
+        return false
+    }
+}
+attendancesById()
 export default {
     attendancesAll,
     attendancesByDepartment,
     totalAttendancesAll,
     countAttendancesByReason,
     attendancesByReason,
-    numberOfCallsHours
+    numberOfCallsHours,
+    attendancesById
 }

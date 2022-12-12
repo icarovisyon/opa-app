@@ -12,5 +12,12 @@ async function getCustomerReviewMedia(req, res) {
     return res.status(200).json(response)
 }
 
+async function getClientByMessageAttendaces(req, res) {
+    const { message, dateStart, dateFinal } = req.query
+    const response = await service.clientByMessageAttendaces(message, dateStart, dateFinal)
+    return res.status(200).json(response)
 
-export default { getClientsTag, getCustomerReviewMedia }
+}
+
+
+export default { getClientsTag, getCustomerReviewMedia, getClientByMessageAttendaces }

@@ -1,8 +1,6 @@
 import model from '../models/models.js'
 import { mongoose } from '../db/db.js'
 
-
-
 async function tagOnly(tag) {
     try {
         const conn = mongoose.createConnection(process.env.URL_MONGO)

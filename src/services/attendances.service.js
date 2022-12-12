@@ -325,10 +325,10 @@ async function numberOfCallsHours(dateStart, dateFinal, manager) {
             attendances.map(attendace => {
                 teste.push({
                     id: id++,
-                    hora: attendace._id.hour,
-                    dia: attendace._id.day,
-                    mes: attendace._id.month,
-                    ano: attendace._id.year,
+                    hora: attendace._id.hora,
+                    dia: attendace._id.dia,
+                    mes: attendace._id.mes,
+                    ano: attendace._id.ano,
                     quantidade: attendace.count
                 })
             })

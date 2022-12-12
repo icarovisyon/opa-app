@@ -25,5 +25,6 @@ router.get('/user-department', departments.getUserDepartment)
 
 router.get('/clients-by-tags', client.getClientsTag)
 router.get('/customer-review-media', client.getCustomerReviewMedia)
+router.get('/customer-message-attendances', client.getClientByMessageAttendaces)
 
 export { router }

@@ -118,6 +118,26 @@ const motivoAtendimentoSchema = new mongoose.Schema({
 );
 
 
+const mensagemAtendimentosSchema = new mongoose.Schema({
+    _id: ObjectId,
+    id_rota: ObjectId,
+    id_atend: ObjectId,
+    mensagem: String,
+    objeto: String,
+    chamada: String,
+    envioForaJanela24h: Boolean,
+    data: Date,
+    statusEnvio: {
+        status: String,
+        observacao: String
+    },
+    createdAt: Date,
+    updatedAt: Date,
+    __v: 0,
+    idMensagemCanal: String
+}, { collection: 'atendimentos_mensagens' }
+)
+
 export default {
     atendimentos: atendimentosSchema,
     departamentosUsuarios: departamentosUsuariosSchema,
@@ -125,5 +145,6 @@ export default {
     tags: tagsSchema,
     cliente: clienteSchema,
     motivoAtendimentos: motivoAtendimentoSchema,
+    mensagemAtendimentos: mensagemAtendimentosSchema,
     ObjectId: ObjectId
 }

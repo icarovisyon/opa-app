@@ -1,5 +1,6 @@
 import model from '../models/models.js'
 import { mongoose } from '../db/db.js'
+import { ObjectID } from 'bson'
 
 async function clients() {
     try {
@@ -61,4 +62,30 @@ async function evaluationClient(dateStart, dateFinal) {
     }
 }
 
-export default { clients, clientsTag, evaluationClient }
+async function clientsById(id) {
+    try {
+        const conn = mongoose.createConnection(process.env.URL_MONGO)
+        const clients = conn.model('clientes', model.cliente)
+
+        const response = await clients.find({
+            _id: ObjectID(id)
+        }, {
+            _id: 1,
+            nome: 1,
+            status: 1
+        }
+        )
+        await conn.close()
+        return response
+    } catch (error) {
+        console.log(error)
+        return false
+    }
+}
+
+export default {
+    clients,
+    clientsTag,
+    evaluationClient,
+    clientsById
+}

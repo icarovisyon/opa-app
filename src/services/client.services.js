@@ -1,5 +1,7 @@
 import Consult from '../repositories/client.repositories.js'
 import tags from '../repositories/tags.repositories.js'
+import attendances from '../repositories/attendances.respositories.js'
+import messagesAttendances from '../repositories/message.repositories.js'
 
 import listClients from '../file/clients.json' assert { type: "json" }
 import { groupBy, orderBy } from '../utils/utils.js'
@@ -82,5 +84,20 @@ async function customerReviewMedia(dateStart, dateFinal) {
     }
 }
 
+async function clientByMessageAttendaces(message, dateStart, dateFinal) {
+    try {
+        const messages = await messagesAttendances.messagesAttendances(message, dateStart, dateFinal)
+        const attendaces = []
 
-export default { clientTags, customerReviewMedia }
+        /*         for (const message in messages) {
+                    const response = await attendances.attendancesById(message.id_rota)
+                    attendaces.push(response)
+                } */
+        return messages
+    } catch (error) {
+        console.log(error)
+        return false
+    }
+}
+
+export default { clientTags, customerReviewMedia, clientByMessageAttendaces }

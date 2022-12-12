@@ -5,6 +5,7 @@ import { DataGraphBar, GraphicBar } from "../components/graphics/bar"
 import { SideBar } from "../components/sideBar"
 import { dateFilterDefaul } from "../config/config"
 import { api } from "../hooks/useEffect"
+import { dateFormat } from "../utils/utils"
 
 interface ListData {
     id: string,

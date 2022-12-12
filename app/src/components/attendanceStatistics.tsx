@@ -11,15 +11,26 @@ import { CSVLink } from "react-csv"
 import { Title } from "./title"
 import { DataGraphBar, defaultValuesGraphicBar, GraphicBar } from "./graphics/bar"
 
-interface GraphicsByReasonProps {
+interface ReasonProps {
     motivo: string,
     quantidade: number
 }
 
-interface DataGraphicsTimeWaitingAttendances {
+interface NumberCallsWaitingTimeProps {
     tempo: number,
     chamados: number,
     departamentos: string
+}
+
+interface NumberCallHoursProps {
+    departamento: string,
+    data: [{
+        hora: number,
+        dia: number,
+        mes: number,
+        ano: number,
+        quantidade: number
+    }]
 }
 
 const headersCsv = {
@@ -40,6 +51,13 @@ const headersCsv = {
         { label: "Motivo", key: "motivo" },
         { label: "Media", key: "media" },
         { label: "Departamento", key: "departamento" }
+    ],
+    numberCallByHours: [
+        { label: "Quantidade", key: "quantidade" },
+        { label: "Hora", key: "hora" },
+        { label: "Dia", key: "dia" },
+        { label: "Mes", key: "mes" },
+        { label: "Ano", key: "ano" }
     ]
 }
 
@@ -64,32 +82,42 @@ const columnsGridCallTimeMediumByReason: GridColDef[] = [
     { field: "media", headerName: "media de tempo em horas", width: 210 }
 ]
 
+const columnsGridByNumberCallsHours: GridColDef[] = [
+    { field: "quantidade", headerName: "Quantidade", width: 146 },
+    { field: "hora", headerName: "Hora", width: 146 },
+    { field: "dia", headerName: "Dia", width: 146 },
+    { field: "mes", headerName: "Mês", width: 146 },
+    { field: "ano", headerName: "Ano", width: 146 },
+]
+
 export function AttendanceByReason() {
     const [gestor, setGestor] = useState('')
     const [isFeching, setIsFeching] = useState<boolean>(false)
 
-    const [dateStart, setDateStart] = useState(dateFilterDefaul.startDate)
-    const [dateFinal, setDateFinal] = useState(dateFilterDefaul.finalDate)
+    const [dateStart, setDateStart] = useState(dateFilterDefaul.start)
+    const [dateFinal, setDateFinal] = useState(dateFilterDefaul.final)
 
     const [reload, setReload] = useState(true)
 
     const [listByReasons, setListByReasons] = useState<GridRowsProp>(defaultGrid)
-    const [csvByReasons, setCsvByReasons] = useState<GraphicsByReasonProps[]>([{ motivo: "", quantidade: 0 }])
+    const [csvByReasons, setCsvByReasons] = useState<ReasonProps[]>([{ motivo: "", quantidade: 0 }])
 
     const [listByBumberCallsWaitingTime, setListByBumberCallsWaitingTime] = useState<GridRowsProp>(defaultGrid)
-    const [csvByBumberCallsWaitingTime, setCsvByBumberCallsWaitingTime] = useState<GraphicsByReasonProps[]>(
+    const [csvByBumberCallsWaitingTime, setCsvByBumberCallsWaitingTime] = useState<ReasonProps[]>(
         [{ motivo: "", quantidade: 0 }])
 
     const [dataTimeWaitingAttendances, setDataTimeWaitingAttendances] = useState<DataGraphBar>(defaultValuesGraphicBar)
 
     const [callTimeMediumByReason, setCallTimeMediumByReason] = useState<GridRowsProp>(defaultGrid)
-    const [csvCallTimeMediumByReason, setCsvCallTimeMediumByReason] = useState<GraphicsByReasonProps[]>(
+    const [csvCallTimeMediumByReason, setCsvCallTimeMediumByReason] = useState<ReasonProps[]>(
         [{ motivo: "", quantidade: 0 }])
+
+    const [callNumberHour, setCallNumberHour] = useState<GridRowsProp>(defaultGrid)
 
     useEffect(() => {
         async function loadAttendancesByReason() {
             setIsFeching(true)
-            await api.get<DataGraphicsTimeWaitingAttendances[]>(`/call-time-by-department/${gestor}?dateStart=${dateStart}&dateFinal=${dateFinal}`)
+            await api.get<NumberCallsWaitingTimeProps[]>(`/call-time-by-department/${gestor}?dateStart=${dateStart}&dateFinal=${dateFinal}`)
                 .then(response => {
                     if (response.data) {
                         let label: String[] = []
@@ -108,7 +136,7 @@ export function AttendanceByReason() {
                 }).catch(error => console.log(error))
 
 
-            await api.get<GraphicsByReasonProps[]>(`/attendance-number?gestor=${gestor}&dateStart=${dateStart}&dateFinal=${dateFinal}`)
+            api.get<ReasonProps[]>(`/attendance-number?gestor=${gestor}&dateStart=${dateStart}&dateFinal=${dateFinal}`)
                 .then(response => {
                     if (response.data) {
                         setListByBumberCallsWaitingTime(response.data)
@@ -116,7 +144,7 @@ export function AttendanceByReason() {
                     }
                 }).catch(error => console.log(error))
 
-            await api.get<GraphicsByReasonProps[]>(`/attendance-reasons?gestor=${gestor}&dateStart=${dateStart}&dateFinal=${dateFinal}`)
+            api.get<ReasonProps[]>(`/attendance-reasons?gestor=${gestor}&dateStart=${dateStart}&dateFinal=${dateFinal}`)
                 .then(response => {
                     if (response.data) {
                         setListByReasons(response.data)
@@ -124,7 +152,7 @@ export function AttendanceByReason() {
                     }
                 }).catch(error => console.log(error))
 
-            await api.get<GraphicsByReasonProps[]>(`/call-time-medium-reasons?gestor=${gestor}&dateStart=${dateStart}&dateFinal=${dateFinal}`)
+            api.get<ReasonProps[]>(`/call-time-medium-reasons?gestor=${gestor}&dateStart=${dateStart}&dateFinal=${dateFinal}`)
                 .then(response => {
                     if (response.data) {
                         setCallTimeMediumByReason(response.data)
@@ -132,30 +160,44 @@ export function AttendanceByReason() {
                     }
                 }).catch(error => console.log(error))
 
+
+            api.get<ReasonProps[]>(`/attendance-number?gestor=${gestor}&dateStart=${dateStart}&dateFinal=${dateFinal}`)
+                .then(response => {
+                    if (response.data) {
+                        setListByBumberCallsWaitingTime(response.data)
+                        setCsvByBumberCallsWaitingTime(response.data)
+                    }
+                }).catch(error => console.log(error))
+
+            await api.get<NumberCallHoursProps[]>(`/number-call-by-hours?gestor=${gestor}&dateStart=${dateStart}&dateFinal=${dateFinal}`)
+                .then(response => {
+                    if (response.data) {
+                        setCallNumberHour(response.data)
+                    }
+                })
             setIsFeching(false)
+
         }
         if (gestor !== '') {
             loadAttendancesByReason()
         }
     }, [reload])
 
-    const styles = [{
-        te: {
-            margin: "20px"
-        }
-    }]
+    const styleDate = {
+        width: "200px"
+    }
     return (
         <Main>
             <ContentTop>
                 <Sheach type="text" placeholder="Gestor" onChange={e => setGestor(e.target.value)} />
                 <DateContent>
                     <Description style={stylesGlobal.Description}>Inicial:</Description>
-                    <InputDate value={dateStart} id="dateStart" type={"date"} onChange={event => setDateStart(event.target.value)} />
+                    <InputDate style={styleDate} value={dateStart} id="dateStart" type={"datetime-local"} onChange={event => setDateStart(event.target.value)} />
                 </DateContent>
 
                 <DateContent>
                     <Description style={stylesGlobal.Description}>Final:</Description>
-                    <InputDate value={dateFinal} id="dateFinal" type={"date"} onChange={event => setDateFinal(event.target.value)} />
+                    <InputDate style={styleDate} value={dateFinal} id="dateFinal" type={"datetime-local"} onChange={event => setDateFinal(event.target.value)} />
                 </DateContent>
 
                 <Button style={stylesGlobal.Button} onClick={e => setReload(!reload)}>Pesquisar</Button>
@@ -221,8 +263,30 @@ export function AttendanceByReason() {
                     </ContentGrid>
                 </>}
             </Content>
+            {callNumberHour?.length &&
+                <Title style={stylesGlobal.Title} title="Chamados abertos por hora:" />
+            }
+            {callNumberHour?.length > 0 && callNumberHour.map((call, index) => (
+                <>
+                    <br />
+                    <Title style={stylesGlobal.Title} title={call.departamento + ":"} />
+                    <CSVLink
+                        style={stylesGlobal.ButtonCsv}
+                        data={call.data}
+                        headers={headersCsv.numberCallByHours}>
+                        Baixar CSV
+                        <Icon className="fa fa-download" aria-hidden="true" />
+                    </CSVLink>
+                    <ContentGrid key={index}>
+                        <DataGrid
+                            rows={call.data}
+                            columns={columnsGridByNumberCallsHours} />
+                    </ContentGrid>
+
+                </>))
+            }
             <br /><br />
-        </Main>
+        </Main >
     )
 }
 

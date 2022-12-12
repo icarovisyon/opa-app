@@ -8,7 +8,7 @@
         "email": "emannuel.e@gmail.com"
     },
     "scripts": {
-        "dev": "nodemon ./src/server.js  --ignore node_modules/ --ignore public/",
+        "dev": "nodemon ./src/server.js  --ignore node_modules/ --ignore public/ --ignore *.json",
         "start": "forever start ./src/server.js",
         "mongo": "mongod --dbpath /var/lib/mongodb --fork --logpath /dev/null"
     },
