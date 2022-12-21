@@ -6,6 +6,10 @@ import { SideBar } from "../components/sideBar"
 
 
 export function Client() {
+    if (!window.sessionStorage.getItem("token")) {
+        window.location.replace('/');
+    }
+
     const [modal, setModal] = useState<boolean>(false)
     const [dispaySheach, setDispaySheach] = useState<string>('block')
 

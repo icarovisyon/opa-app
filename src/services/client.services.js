@@ -2,12 +2,20 @@ import Consult from '../repositories/client.repositories.js'
 import tags from '../repositories/tags.repositories.js'
 import attendances from '../repositories/attendances.respositories.js'
 import messagesAttendances from '../repositories/message.repositories.js'
+import { ValidateSession } from './session.service.js'
 
 import listClients from '../file/clients.json' assert { type: "json" }
 import { groupBy, orderBy } from '../utils/utils.js'
 
-async function clientTags(name) {
+async function clientTags(token, name) {
     try {
+        if (!ValidateSession(token)) {
+            return {
+                type: 'error',
+                message: 'Unauthorized'
+            }
+        }
+
         const tag = await tags.tagOnly(name)
         if (!tag[0]) {
             return {
@@ -40,8 +48,14 @@ async function clientTags(name) {
     }
 }
 
-async function customerReviewMedia(dateStart, dateFinal) {
+async function customerReviewMedia(token, dateStart, dateFinal) {
     try {
+        if (!ValidateSession(token)) {
+            return {
+                type: 'error',
+                message: 'Unauthorized'
+            }
+        }
         const response = await Consult.evaluationClient(dateStart, dateFinal)
 
         const avaliations = groupBy(response, 'client')
@@ -84,8 +98,14 @@ async function customerReviewMedia(dateStart, dateFinal) {
     }
 }
 
-async function clientByMessageAttendaces(message, dateStart, dateFinal) {
+async function clientByMessageAttendaces(token, message, dateStart, dateFinal) {
     try {
+        if (!ValidateSession(token)) {
+            return {
+                type: 'error',
+                message: 'Unauthorized'
+            }
+        }
         const messages = await messagesAttendances.messagesAttendances(message, dateStart, dateFinal)
         const attendaces = []
 

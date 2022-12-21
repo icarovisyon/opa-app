@@ -20,9 +20,9 @@
         "dotenv": "^16.0.3",
         "express": "~4.16.1",
         "forever": "^4.0.3",
+        "jsonwebtoken": "^8.5.1",
         "mongodb": "^4.10.0",
-        "mongoose": "^6.6.5",
-        "prisma": "^4.4.0"
+        "mongoose": "^6.6.5"
     },
     "devDependencies": {
         "nodemon": "^2.0.20",

@@ -1,7 +1,15 @@
 import Consult from '../repositories/attendant.repositores.js'
+import { ValidateSession } from './session.service.js'
 
-async function attendantCountDaysAssuming(attendant, dateStart, dateFinal) {
+async function attendantCountDaysAssuming(token, attendant, dateStart, dateFinal) {
     try {
+        if (!ValidateSession(token)) {
+            return {
+                type: 'error',
+                message: 'Unauthorized'
+            }
+        }
+
         const response = await Consult.attendantCountDaysAssuming(attendant, dateStart, dateFinal)
         return {
             description: "Atendimentos assumidos por dia",
@@ -13,8 +21,15 @@ async function attendantCountDaysAssuming(attendant, dateStart, dateFinal) {
     }
 }
 
-async function attendantCountDaysFinished(attendant, dateStart, dateFinal) {
+async function attendantCountDaysFinished(token, attendant, dateStart, dateFinal) {
     try {
+        if (!ValidateSession(token)) {
+            return {
+                type: 'error',
+                message: 'Unauthorized'
+            }
+        }
+
         const response = await Consult.attendantCountDaysFinished(attendant, dateStart, dateFinal)
         return {
             description: "Atendimentos finalizados por dia",
