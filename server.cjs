@@ -10,6 +10,4 @@ app.use('/*', express.static(resolve(__dirname, './app/dist')))
 var port = 3000;
 var hostname = '0.0.0.0';
 
-app.listen(port, hostname, () => {
-    console.log(`Server running at http://${hostname}:${port}/`);
-});
+app.listen(port, hostname);
