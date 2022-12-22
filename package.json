@@ -9,7 +9,7 @@
     },
     "scripts": {
         "dev": "nodemon ./src/server.js  --ignore node_modules/ --ignore public/ --ignore *.json",
-        "start": "forever start ./src/server.js",
+        "start": "node ./src/server.js",
         "mongo": "mongod --dbpath /var/lib/mongodb --fork --logpath /dev/null"
     },
     "dependencies": {

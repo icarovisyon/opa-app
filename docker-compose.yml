@@ -1,0 +1,23 @@
+version: "3"
+
+services:
+  node:
+    image: node
+    container_name: node
+    working_dir: /app
+    command: npm start
+    hostname: backand
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./:/app/
+  app:
+    image: node
+    container_name: app
+    working_dir: /app
+    command: node server.cjs
+    hostname: nodeserver
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./:/app/
