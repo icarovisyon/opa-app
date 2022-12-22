@@ -22,17 +22,8 @@ function timeLimiter(hours, minuts) {
 }
 
 function departmentSelect(select) {
-    if (select == "Pamela" || select == "pamela") {
-        return departments.pamela
-    }
-    if (select == "Marcelo" || select == "marcelo") {
-        return departments.marcelo
-    }
-    if (select == "Kenedi" || select == "kenedi") {
-        return departments.kenedi
-    }
-    if (select == "Giulia" || select == "giulia") {
-        return departments.giulia
+    if (select == "Diego" || select == "diego") {
+        return departments.Diego
     }
     return false
 }

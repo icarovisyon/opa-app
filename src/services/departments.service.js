@@ -1,8 +1,15 @@
 import departments from '../repositories/depatments.repositories.js'
 import attendent from '../repositories/attendant.repositores.js'
+import { ValidateSession } from './session.service.js'
 
-async function userDepartments(department) {
+async function userDepartments(token, department) {
     try {
+        if (!ValidateSession(token)) {
+            return {
+                type: 'error',
+                message: 'Unauthorized'
+            }
+        }
         const response = await departments.userDepartments(department)
         const user = []
 

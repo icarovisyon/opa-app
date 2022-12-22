@@ -25,6 +25,10 @@ const staticsAttendanceDefault: StaticsAttendanceProps = {}
 
 
 export function Homepage() {
+    if (!window.sessionStorage.getItem("token")) {
+        window.location.replace('/');
+    }
+
     const { data: timeMidRow, isFetching: loadingTimeMidRow } = useFetch<TimeMidRowProps>(`/call-time-all?dateStart=${dateFilterDefaul.start}&dateFinal=${dateFilterDefaul.final}`, timeMidRowDefault)
 
     const { data: staticsAttendance, isFetching: loadingStaticsAttendance } = useFetch<StaticsAttendanceProps>(`/attendance-statistics?dateStart=${dateFilterDefaul.start}&dateFinal=${dateFilterDefaul.final}`, staticsAttendanceDefault)

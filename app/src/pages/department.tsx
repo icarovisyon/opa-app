@@ -5,10 +5,12 @@ import { AttendanceByReason } from "../components/attendanceStatistics"
 import { SideBar } from "../components/sideBar"
 
 export function Departamento() {
+    if (!window.sessionStorage.getItem("token")) {
+        window.location.replace('/');
+    }
+
     const [modalAttendancesStatics, setModalAttendancesStatics] = useState(false)
     const [displayReasonByAttendances, setDisplayReasonByAttendances] = useState('block')
-
-
 
     useEffect(() => {
         setDisplayReasonByAttendances(modalAttendancesStatics ? 'none' : 'block')

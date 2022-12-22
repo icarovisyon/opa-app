@@ -5,6 +5,7 @@ import attedances from '../controllers/attedances.controller.js'
 import departments from '../controllers/depatments.controller.js'
 import attendant from '../controllers/attendant.controller.js'
 import client from '../controllers/clients.controller.js'
+import { Login } from '../controllers/session.controller.js';
 
 
 router.get('/call-time-all', attedances.getTimeAttendancesAll)
@@ -26,5 +27,7 @@ router.get('/user-department', departments.getUserDepartment)
 router.get('/clients-by-tags', client.getClientsTag)
 router.get('/customer-review-media', client.getCustomerReviewMedia)
 router.get('/customer-message-attendances', client.getClientByMessageAttendaces)
+
+router.post('/auth/login', Login)
 
 export { router }

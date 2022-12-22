@@ -1,9 +1,17 @@
 import Consult from '../repositories/attendances.respositories.js'
 import { calMinutsDiferenceDate, departmentSelect, timeLimiter } from '../utils/utils.js'
 import reason from '../repositories/reasons.repositories.js'
+import { ValidateSession } from './session.service.js'
 
-async function timeAttendancesDepartment(departament, dateStart, dateFinal) {
+async function timeAttendancesDepartment(token, departament, dateStart, dateFinal) {
     try {
+        if (!ValidateSession(token)) {
+            return {
+                type: 'error',
+                message: 'Unauthorized'
+            }
+        }
+
         if (dateStart == "" || dateFinal == "") {
             return {
                 type: "error",
@@ -67,8 +75,15 @@ async function timeAttendancesDepartment(departament, dateStart, dateFinal) {
     }
 }
 
-async function timeAttendancesAll(dateStart, dateFinal) {
+async function timeAttendancesAll(token, dateStart, dateFinal) {
     try {
+        if (!ValidateSession(token)) {
+            return {
+                type: 'error',
+                message: 'Unauthorized'
+            }
+        }
+
         const response = await Consult.attendancesAll(dateStart, dateFinal)
         let timeMinuts = 0
         let count = 0
@@ -102,8 +117,15 @@ async function timeAttendancesAll(dateStart, dateFinal) {
     }
 }
 
-async function totalAttendancesAll(dateStart, dateFinal) {
+async function totalAttendancesAll(token, dateStart, dateFinal) {
     try {
+        if (!ValidateSession(token)) {
+            return {
+                type: 'error',
+                message: 'Unauthorized'
+            }
+        }
+
         const totalAmount = await Consult.totalAttendancesAll(dateStart, dateFinal)
 
         const attendancesAll = await Consult.attendancesAll(dateStart, dateFinal)
@@ -133,8 +155,22 @@ async function totalAttendancesAll(dateStart, dateFinal) {
     }
 }
 
-async function attendancesByReason(manager, dateStart, dateFinal) {
+async function attendancesByReason(token, manager, dateStart, dateFinal) {
     try {
+        if (!ValidateSession(token)) {
+
+            return {
+                type: 'error',
+                message: 'Unauthorized'
+            }
+        }
+
+        if (dateStart == "" || dateStart == undefined || dateFinal == "" || dateFinal == undefined) {
+            return {
+                type: "error",
+                message: "Preencha um periodo de datas!"
+            }
+        }
         const departments = departmentSelect(manager)
 
         let count = 1
@@ -169,8 +205,15 @@ async function attendancesByReason(manager, dateStart, dateFinal) {
     }
 }
 
-async function numberAttendancesByTime(departament, dateStart, dateFinal) {
+async function numberAttendancesByTime(token, departament, dateStart, dateFinal) {
     try {
+        if (!ValidateSession(token)) {
+            return {
+                type: 'error',
+                message: 'Unauthorized'
+            }
+        }
+
         if (dateStart == "" || dateStart == undefined || dateFinal == "" || dateFinal == undefined) {
             return {
                 type: "error",
@@ -249,8 +292,15 @@ async function numberAttendancesByTime(departament, dateStart, dateFinal) {
     }
 }
 
-async function timeOfCallsByReason(manager, dateStart, dateFinal) {
+async function timeOfCallsByReason(token, manager, dateStart, dateFinal) {
     try {
+        if (!ValidateSession(token)) {
+            return {
+                type: 'error',
+                message: 'Unauthorized'
+            }
+        }
+
         if (dateStart == "" || dateStart == undefined || dateFinal == "" || dateFinal == undefined) {
             return {
                 type: "error",
@@ -306,8 +356,14 @@ async function timeOfCallsByReason(manager, dateStart, dateFinal) {
     }
 }
 
-async function numberOfCallsHours(dateStart, dateFinal, manager) {
+async function numberOfCallsHours(token, dateStart, dateFinal, manager) {
     try {
+        if (!ValidateSession(token)) {
+            return {
+                type: 'error',
+                message: 'Unauthorized'
+            }
+        }
         if (dateStart == "" || dateStart == undefined || dateFinal == "" || dateFinal == undefined) {
             return {
                 type: "error",

@@ -35,6 +35,10 @@ interface DataAttendances {
 }
 
 export function Attendance() {
+    if (!window.sessionStorage.getItem("token")) {
+        window.location.replace('/');
+    }
+
     const [gestor, setGestor] = useState('')
     const [listSetor, setListSetor] = useState<ListData[]>()
     const [listAttendant, setListAttendant] = useState<ListData[]>()

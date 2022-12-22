@@ -2,7 +2,10 @@ import axios from "axios"
 import { useEffect, useState } from "react"
 
 export const api = axios.create({
-    baseURL: "http://192.168.27.15:8000"
+    baseURL: "http://localhost:8000",
+    headers: {
+        token: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0aW1lIjoiV2VkIERlYyAyMSAyMDIyIDE3OjI3OjQ1IEdNVC0wMzAwIChCcmFzaWxpYSBTdGFuZGFyZCBUaW1lKSIsInVzZXJJZCI6MTIsImlhdCI6MTY3MTY1NDQ2NX0.lJMMqlIAiSfguHPtt2IhiDNi_2fzquAXDDSGg7pEgGo'
+    }
 })
 
 export function useFetch<T = unknown>(url: string, valueDefaultt: T) {
