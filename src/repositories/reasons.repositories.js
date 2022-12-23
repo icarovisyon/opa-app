@@ -1,4 +1,4 @@
-import model from '../models/models.js'
+import model from '../models/models2.js'
 import { mongoose } from '../db/db.js'
 
 
