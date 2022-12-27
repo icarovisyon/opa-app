@@ -41,7 +41,6 @@ function ValidateSession(token) {
         if (!token) {
             return false
         }
-        console.log(token);
         const verified = jwt.verify(token, process.env.JWT_SECRET_KEY);
         if (verified) {
             return true

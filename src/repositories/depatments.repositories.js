@@ -10,7 +10,7 @@ async function userDepartments(department) {
         const departamentos_usuarios = conn.model('departamentos_usuarios', model.departamentosUsuarios)
 
         const response = await departamentos_usuarios.find({
-            departamento: department,
+            departamento: ObjectId(department),
             statusVinculo: "A"
         })
         await conn.close()

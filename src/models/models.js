@@ -2,89 +2,102 @@ import { mongoose } from '../db/db.js'
 
 const ObjectId = mongoose.Types.ObjectId
 
-const clienteSchema = new mongoose.Schema({
-    _id: ObjectId,
-    nome: String,
-    fantasia: String,
-    cpf_cnpj: String,
-    status: String,
-    prospect: Array,
-    cliente: String,
-    fornecedor: ObjectId,
-    tags: ObjectId
-}, { collection: 'clientes' }
-)
-
 const atendimentosSchema = new mongoose.Schema({
     _id: ObjectId,
-    id_atendimento: Number,
-    id_cliente: ObjectId,
+    idAtendente: ObjectId,
+    idAtendimentoOrigem: ObjectId,
+    idSetor: ObjectId,
     id_user: ObjectId,
-    id_atendente: ObjectId,
-    abertoPor: String,
-    finalizadoPor: String,
+    idCanalComunicacao: ObjectId,
+    canalOrigem: ObjectId,
+    idCanalOrigem: ObjectId,
     setor: ObjectId,
-    descricao: String,
+    nivelPrioridadeListagem: Number,
     status: String,
-    canal: String,
-    canal_id: String,
-    canal_cliente: String,
-    date: Date,
-    inicio: Date,
-    fim: Date,
-    update: Date,
-    protocolo: String,
-    tags: Array,
-    usuarios_acompanhar: Array,
-    atendentes: [
+    data: {
+        abertura: Date,
+        inicioAtendimento: Date,
+        encerramento: Date,
+        ultimaAtualizacao: Date,
+        ultimaTransferenciaDepartamento: Date
+    },
+    clienteTerceiro: String,
+    clienteContatoTerceiro: {
+        _id: ObjectId,
+        nome: String,
+        telegram: Number,
+        historico_email: Boolean,
+        habilitarAlerta: Boolean,
+        requerAutenticacaoSempre: Boolean,
+        contatoEhHumano: Boolean,
+        classificacao: String,
+        emails: [],
+        fones: [],
+        opt_in_opt_out: [],
+        createdAt: Date,
+        updatedAt: Date,
+        __v: Number,
+        imagem: String
+    },
+    historico: [],
+    tags: [],
+    historicoAtendentes: [
         {
-            _id: ObjectId,
-            atendente: ObjectId,
+            id: ObjectId,
             departamento: ObjectId,
-            fim: Date,
-            atendimentoHumano: String,
-            inicio: Date
+            atendimentoHumano: Boolean,
+            _id: ObjectId,
+            dataInicioAtendimento: Date,
+            dataFimAtendimento: Date
         }
     ],
-    avaliacoes: Array,
-    observacoes: Array,
-    nivelPrioridadeListagem: Number,
-    abertoViaApi: Boolean,
-    ultimaTransferencia: Date,
-    ultimaTransferenciaFilaDepartamento: Date,
-    data_fixacao: Date,
-    transferenciasCallCenter: Array,
-    solicitacoes: Array,
-    createdAt: Date,
-    updatedAt: Date,
-    __v: Number,
-    estrelas_atend: Number,
-    id_motivo_atendimento: ObjectId
+    avaliacoes: [],
+    observacoes: [
+        {
+            idAtendente: ObjectId,
+            dataCriacao: Date,
+            mensagem: String,
+            _id: ObjectId
+        }
+    ],
+    mensagens: [
+        {
+            idRemetenteAtendente: ObjectId,
+            idMensagemCitada: String,
+            idMidia: ObjectId,
+            idChamada: ObjectId,
+            template: String,
+            mensagem: String,
+            tipo: String,
+            envio: {
+                status: String,
+                observacao: String
+            },
+            _id: ObjectId,
+            data: Date
+        }],
+    __v: 0
 }, { collection: 'atendimentos' }
 )
 
 const usuariosSchema = new mongoose.Schema({
     _id: ObjectId,
     empresa: ObjectId,
-    token: Number,
+    token: String,
     nome: String,
-    status: String,
-    email: String,
+    status: Boolean,
     senha: String,
+    online: String,
     imagem: String,
     tipo: String,
-    genero: String,
-    perfil_permissoes: ObjectId,
-    siga_me: String,
-    siga_me_fone: String,
-    permiteAcessoApi: Boolean,
-    perfilPermissoesApi: Boolean,
-    conexoes: Array,
-    createdAt: Date,
-    updatedAt: Date,
-    __v: Number,
-    ultimo_status: String,
-    online: String
+    flow: ObjectId,
+    departamento: ObjectId,
+    encerramento_inatividade: Number,
+    msg_encerramento_inatividade: String,
+    tipo_acao_inatividade: String,
+    departamento_transf_inatividade: String,
+    conexoes: [],
+    __v: 0
 }, { collection: 'usuarios' }
 );
 
@@ -109,42 +122,16 @@ const tagsSchema = new mongoose.Schema({
 const motivoAtendimentoSchema = new mongoose.Schema({
     _id: ObjectId,
     motivo: String,
-    departamentos: ObjectId,
-    createdAt: String,
-    cor: String,
-    updateAt: String,
-    _v: String
+    departamentos: [ObjectId],
+    __v: Number
 }, { collection: 'motivo_atendimentos' }
 );
-
-
-const mensagemAtendimentosSchema = new mongoose.Schema({
-    _id: ObjectId,
-    id_rota: ObjectId,
-    id_atend: ObjectId,
-    mensagem: String,
-    objeto: String,
-    chamada: String,
-    envioForaJanela24h: Boolean,
-    data: Date,
-    statusEnvio: {
-        status: String,
-        observacao: String
-    },
-    createdAt: Date,
-    updatedAt: Date,
-    __v: 0,
-    idMensagemCanal: String
-}, { collection: 'atendimentos_mensagens' }
-)
 
 export default {
     atendimentos: atendimentosSchema,
     departamentosUsuarios: departamentosUsuariosSchema,
     usuario: usuariosSchema,
     tags: tagsSchema,
-    cliente: clienteSchema,
     motivoAtendimentos: motivoAtendimentoSchema,
-    mensagemAtendimentos: mensagemAtendimentosSchema,
     ObjectId: ObjectId
 }

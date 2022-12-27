@@ -11,19 +11,19 @@ async function attendantCountDaysAssuming(attendant, dateStart, dateFinal) {
         const response = await atendimento.aggregate([
             {
                 $match: {
-                    ultimaTransferencia: {
+                    "data.ultimaTransferenciaDepartamento": {
                         $gt: new Date(dateStart),
                         $lt: new Date(dateFinal)
                     },
-                    id_atendente: ObjectId(attendant),
+                    idAtendente: ObjectId(attendant),
                     canal: { $ne: "pabx" }
                 }
             },
             {
                 $project: {
-                    day: { $dayOfMonth: "$ultimaTransferencia" },
-                    month: { $month: "$ultimaTransferencia" },
-                    year: { $year: "$ultimaTransferencia" }
+                    day: { $dayOfMonth: "$data.ultimaTransferenciaDepartamento" },
+                    month: { $month: "$data.ultimaTransferenciaDepartamento" },
+                    year: { $year: "$data.ultimaTransferenciaDepartamento" }
                 }
             },
             {
@@ -31,7 +31,7 @@ async function attendantCountDaysAssuming(attendant, dateStart, dateFinal) {
                     _id: {
                         day: "$day",
                         month: "$month",
-                        year: "$year", atendente: "$atendente"
+                        year: "$year", atendente: "$idAtendente"
                     }, count: { $sum: 1 }
                 }
             },
@@ -55,19 +55,19 @@ async function attendantCountDaysFinished(attendant, dateStart, dateFinal) {
         const response = await atendimento.aggregate([
             {
                 $match: {
-                    fim: {
+                    "data.encerramento": {
                         $gt: new Date(dateStart), $lt: new Date(dateFinal),
                     },
-                    id_atendente: ObjectId(attendant),
+                    idAtendente: ObjectId(attendant),
                     canal: { $ne: "pabx" },
                     status: "F"
                 }
             },
             {
                 $project: {
-                    day: { $dayOfMonth: "$fim" },
-                    month: { $month: "$fim" },
-                    year: { $year: "$fim" }
+                    day: { $dayOfMonth: "$data.encerramento" },
+                    month: { $month: "$data.encerramento" },
+                    year: { $year: "$data.encerramento" }
                 }
             },
             {

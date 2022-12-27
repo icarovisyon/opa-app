@@ -7,7 +7,7 @@ export interface SidebarProps {
 
 export function SideBar({ selected }: SidebarProps) {
     const list = [{
-        to: "/",
+        to: "/dashboard",
         descrition: "Dashboard",
         icon: "fa-solid fa-chart-line"
     },

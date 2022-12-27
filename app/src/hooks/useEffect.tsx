@@ -2,7 +2,7 @@ import axios from "axios"
 import { useEffect, useState } from "react"
 
 export const api = axios.create({
-    baseURL: "http://10.255.0.113:8000",
+    baseURL: "http://10.230.0.90:8000",
     headers: {
         token: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0aW1lIjoiV2VkIERlYyAyMSAyMDIyIDE3OjI3OjQ1IEdNVC0wMzAwIChCcmFzaWxpYSBTdGFuZGFyZCBUaW1lKSIsInVzZXJJZCI6MTIsImlhdCI6MTY3MTY1NDQ2NX0.lJMMqlIAiSfguHPtt2IhiDNi_2fzquAXDDSGg7pEgGo'
     }
