@@ -4,8 +4,8 @@ import attendances from '../repositories/attendances.respositories.js'
 import messagesAttendances from '../repositories/message.repositories.js'
 import { ValidateSession } from './session.service.js'
 
-import listClients from '../file/clients.json' assert { type: "json" }
-import { groupBy, orderBy } from '../utils/utils.js'
+/* import listClients from '../file/clients.json' assert { type: "json" }
+ */import { groupBy, orderBy } from '../utils/utils.js'
 
 async function clientTags(token, name) {
     try {

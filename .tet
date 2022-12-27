@@ -1,0 +1,49 @@
+-- ixcprovedor.view_vd_contratos_produtos_gen source
+
+CREATE OR REPLACE
+ALGORITHM = UNDEFINED VIEW `view_vd_contratos_produtos_gen` AS
+select
+    `vd_contratos_produtos`.`id` AS `id`,
+    `vd_contratos_produtos`.`id_vd_contrato` AS `id_vd_contrato`,
+    `vd_contratos_produtos`.`descricao` AS `descricao`,
+    `vd_contratos_produtos`.`qtde` AS `qtde`,
+    `vd_contratos_produtos`.`id_plano` AS `id_plano`,
+    `vd_contratos_produtos`.`valor_unit` AS `valor_unit`,
+    `vd_contratos_produtos`.`id_unidade` AS `id_unidade`,
+    `vd_contratos_produtos`.`logins_simultaneos` AS `logins_simultaneos`,
+    `vd_contratos_produtos`.`tipo` AS `tipo`,
+    `vd_contratos_produtos`.`id_contrato` AS `id_contrato`,
+    `vd_contratos_produtos`.`id_produto` AS `id_produto`,
+    `vd_contratos_produtos`.`id_tipo_documento` AS `id_tipo_documento`,
+    `cliente_contrato`.`id` AS `cliente_contrato_id`,
+    if(`vd_contratos_produtos`.`id_contrato` is null
+    or `vd_contratos_produtos`.`id_contrato` = 0,
+    'PLA',
+    'PRO') AS `tipo_produtos_plano`,
+    `vd_contratos_produtos`.`valor_unit` * `vd_contratos_produtos`.`qtde` AS `valor_bruto`,
+    if(`vd_contratos_produtos`.`valor_ate_vencimento` > 0,
+    `vd_contratos_produtos`.`valor_ate_vencimento`,
+    `vd_contratos_produtos`.`valor_unit`) * `vd_contratos_produtos`.`qtde` - ifnull(sum(`cliente_contrato_descontos`.`valor`), 0) + ifnull(sum(`cliente_contrato_acrescimos`.`valor`), 0) AS `valor_ate_vencimento`,
+    ifnull(sum(`cliente_contrato_descontos`.`valor`), 0) AS `valor_desconto`,
+    ifnull(sum(`cliente_contrato_acrescimos`.`valor`), 0) AS `valor_acrescimo`,
+    `vd_contratos_produtos`.`valor_unit` * `vd_contratos_produtos`.`qtde` - ifnull(sum(`cliente_contrato_descontos`.`valor`), 0) + ifnull(sum(`cliente_contrato_acrescimos`.`valor`), 0) AS `valor_liquido`
+from
+    (((`vd_contratos_produtos`
+left join `cliente_contrato` on
+    (`cliente_contrato`.`id` = `vd_contratos_produtos`.`id_contrato`
+        or `vd_contratos_produtos`.`id_vd_contrato` = `cliente_contrato`.`id_vd_contrato`))
+left join `cliente_contrato_descontos` on
+    (`cliente_contrato_descontos`.`id_vd_contrato_produtos` = `vd_contratos_produtos`.`id`
+        and `cliente_contrato_descontos`.`id_contrato` = `cliente_contrato`.`id`
+        and (curdate() <= `cliente_contrato_descontos`.`data_validade`
+            or `cliente_contrato_descontos`.`data_validade` is null
+            or `cliente_contrato_descontos`.`data_validade` = '0000-00-00')))
+left join `cliente_contrato_acrescimos` on
+    (`cliente_contrato_acrescimos`.`id_vd_contrato_produtos` = `vd_contratos_produtos`.`id`
+        and `cliente_contrato_acrescimos`.`id_contrato` = `cliente_contrato`.`id`
+        and (curdate() <= `cliente_contrato_acrescimos`.`data_validade`
+            or `cliente_contrato_acrescimos`.`data_validade` is null
+            or `cliente_contrato_acrescimos`.`data_validade` = '0000-00-00')))
+group by
+    `vd_contratos_produtos`.`id`,
+    `cliente_contrato`.`id`;

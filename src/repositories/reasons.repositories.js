@@ -8,10 +8,11 @@ async function reasonsByDepartment(department) {
         const reasons = conn.model('motivo_atendimentos', model.motivoAtendimentos)
 
         const response = await reasons.find({
-            departamentos: department
+            departamentos: { $in: department }
         }, {
             _id: 1,
-            motivo: 1
+            motivo: 1,
+            departamentos: 1
         }).lean().exec()
         await conn.close()
         return response

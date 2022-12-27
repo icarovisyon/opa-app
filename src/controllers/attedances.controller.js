@@ -7,7 +7,7 @@ async function getTimeAttendancesAll(req, res) {
     return res.status(200).header({ "host": "localhost:8081" }).json(response)
 }
 
-async function getAttendances(req, res) {
+async function getTimeAttendancesByDepartment(req, res) {
     const { token } = req.headers
     const { dateStart, dateFinal } = req.query
     const { department } = req.params
@@ -16,8 +16,9 @@ async function getAttendances(req, res) {
 }
 
 async function getTotalAttendancesAll(req, res) {
+    const { token } = req.headers
     const { dateStart, dateFinal } = req.query
-    const response = await service.totalAttendancesAll(dateStart, dateFinal)
+    const response = await service.totalAttendancesAll(token, dateStart, dateFinal)
     return res.status(200).json(response)
 }
 
@@ -51,7 +52,7 @@ async function getNumberOfCallsHours(req, res) {
 
 export default {
     getTimeAttendancesAll,
-    getAttendances,
+    getTimeAttendancesByDepartment,
     getTotalAttendancesAll,
     getAttendancesByReason,
     getnumberAttendancesByTime,

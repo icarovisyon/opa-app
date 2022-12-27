@@ -34,13 +34,12 @@ async function timeAttendancesDepartment(token, departament, dateStart, dateFina
             let timeMinuts = 0
             let count = 0
 
-            let response = await Consult.attendancesByDepartment(departmentSelected[department].id, dateStart, dateFinal)
+            let attendances = await Consult.attendancesByDepartment(departmentSelected[department].id, dateStart, dateFinal)
+            for (const attendance in attendances) {
+                if (attendances[attendance].historicoAtendentes[0]) {
 
-            for (const attendance in response) {
-                if (response[attendance].atendentes[0]) {
-
-                    const createdDate = new Date(response[attendance].createdAt)
-                    const assumeDate = new Date(response[attendance].atendentes[0].inicio)
+                    const createdDate = new Date(attendances[attendance].data.abertura)
+                    const assumeDate = new Date(attendances[attendance].historicoAtendentes[0].dataInicioAtendimento)
 
                     if (timeLimiter(createdDate.getHours(), createdDate.getMinutes())) {
                         let minuts = calMinutsDiferenceDate(assumeDate, createdDate);
@@ -68,6 +67,7 @@ async function timeAttendancesDepartment(token, departament, dateStart, dateFina
         })
         return data
     } catch (err) {
+        console.log(err)
         return {
             error: true,
             message: err
@@ -89,9 +89,9 @@ async function timeAttendancesAll(token, dateStart, dateFinal) {
         let count = 0
 
         for (const data in response) {
-            if (response[data].atendentes[0]) {
-                const createdDate = new Date(response[data].createdAt)
-                const assumeDate = new Date(response[data].atendentes[0].inicio)
+            if (response[data].historicoAtendentes[0]) {
+                const createdDate = new Date(response[data].data.abertura)
+                const assumeDate = new Date(response[data].historicoAtendentes[0].dataInicioAtendimento)
 
                 if (timeLimiter(createdDate.getHours(), createdDate.getMinutes())) {
                     let minuts = calMinutsDiferenceDate(assumeDate, createdDate);
@@ -128,13 +128,14 @@ async function totalAttendancesAll(token, dateStart, dateFinal) {
 
         const totalAmount = await Consult.totalAttendancesAll(dateStart, dateFinal)
 
+
         const attendancesAll = await Consult.attendancesAll(dateStart, dateFinal)
 
         let countInteraction = 0
         let countNotInteraction = 0
 
         for (const attendance in attendancesAll) {
-            if (attendancesAll[attendance].atendentes[0]) {
+            if (attendancesAll[attendance].historicoAtendentes[0]) {
                 countInteraction++
             }
             else {
@@ -205,7 +206,7 @@ async function attendancesByReason(token, manager, dateStart, dateFinal) {
     }
 }
 
-async function numberAttendancesByTime(token, departament, dateStart, dateFinal) {
+async function numberAttendancesByTime(token, department, dateStart, dateFinal) {
     try {
         if (!ValidateSession(token)) {
             return {
@@ -220,9 +221,7 @@ async function numberAttendancesByTime(token, departament, dateStart, dateFinal)
                 message: "Preencha um periodo de datas!"
             }
         }
-        const departmentSelected = departmentSelect(departament)
-
-
+        const departmentSelected = departmentSelect(department)
 
         if (!departmentSelected) {
             return {
@@ -230,6 +229,7 @@ async function numberAttendancesByTime(token, departament, dateStart, dateFinal)
                 message: "Gerente inexistente!"
             }
         }
+
         const data = []
         for (const department in departmentSelected) {
             let minuts5 = 0
@@ -242,10 +242,10 @@ async function numberAttendancesByTime(token, departament, dateStart, dateFinal)
             let response = await Consult.attendancesByDepartment(departmentSelected[department].id, dateStart, dateFinal)
 
             for (const attendance in response) {
-                if (response[attendance].atendentes[0]) {
+                if (response[attendance].historicoAtendentes[0]) {
 
-                    const startDate = new Date(response[attendance].createdAt)
-                    const assumeDate = new Date(response[attendance].atendentes[0].inicio)
+                    const startDate = new Date(response[attendance].data.abertura)
+                    const assumeDate = new Date(response[attendance].historicoAtendentes[0].dataInicioAtendimento)
 
                     if (timeLimiter(startDate.getHours(), startDate.getMinutes())) {
                         let timeMinuts = calMinutsDiferenceDate(assumeDate, startDate)
@@ -285,6 +285,7 @@ async function numberAttendancesByTime(token, departament, dateStart, dateFinal)
 
         return data
     } catch (err) {
+        console.log(err)
         return {
             error: true,
             message: err

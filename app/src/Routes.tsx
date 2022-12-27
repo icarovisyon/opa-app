@@ -14,7 +14,7 @@ function AppRoutes() {
     return (
         <Router basename="/">
             <Routes>
-                <Route path="/" element={<Login />} />
+                <Route path="/login" element={<Login />} />
                 <Route path="/dashboard" element={<Homepage />} />
                 <Route path="/departamento" element={<Departamento />} />
                 <Route path="/cliente" element={<Client />} />

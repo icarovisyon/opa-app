@@ -132,7 +132,6 @@ export default {
     departamentosUsuarios: departamentosUsuariosSchema,
     usuario: usuariosSchema,
     tags: tagsSchema,
-    cliente: clienteSchema,
     motivoAtendimentos: motivoAtendimentoSchema,
     ObjectId: ObjectId
 }
