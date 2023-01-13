@@ -174,7 +174,7 @@ async function attendancesByReason(token, manager, dateStart, dateFinal) {
         }
         const departments = departmentSelect(manager)
 
-        let count = 1
+        let id = 1
 
         const data = []
         for (const department in departments) {
@@ -190,9 +190,10 @@ async function attendancesByReason(token, manager, dateStart, dateFinal) {
                 )
                 if (countAttendances > 0) {
                     data.push({
-                        id: count++,
+                        id: id++,
                         motivo: reasons[reason].motivo,
-                        quantidade: countAttendances
+                        quantidade: countAttendances,
+                        departamento: departments[department].name
                     })
                 }
             }
@@ -402,6 +403,57 @@ async function numberOfCallsHours(token, dateStart, dateFinal, manager) {
     }
 }
 
+async function numberAttendacesByTag(token, manager, dateStart, dateFinal) {
+    try {
+        if (!ValidateSession(token)) {
+
+            return {
+                type: 'error',
+                message: 'Unauthorized'
+            }
+        }
+
+        if (dateStart == "" || dateStart == undefined || dateFinal == "" || dateFinal == undefined) {
+            return {
+                type: "error",
+                message: "Preencha um periodo de datas!"
+            }
+        }
+        const departments = departmentSelect(manager)
+
+        let count = 1
+
+        const data = []
+        for (const department in departments) {
+            const reasons = await reason.reasonsByDepartment(departments[department].id)
+
+            for (const reason in reasons) {
+                const countAttendances = await Consult.countAttendancesByReason(
+                    reasons[reason]._id,
+                    dateStart,
+                    dateFinal,
+                    departments[department].id
+
+                )
+                if (countAttendances > 0) {
+                    data.push({
+                        id: count++,
+                        motivo: reasons[reason].motivo,
+                        quantidade: countAttendances,
+                        departamento: departments[department].name
+                    })
+                }
+            }
+        }
+        return data
+    } catch (err) {
+        return {
+            error: true,
+            message: err
+        }
+    }
+}
+
 export default {
     timeAttendancesAll,
     timeAttendancesDepartment,
@@ -409,5 +461,6 @@ export default {
     attendancesByReason,
     numberAttendancesByTime,
     timeOfCallsByReason,
-    numberOfCallsHours
+    numberOfCallsHours,
+    numberAttendacesByTag
 }

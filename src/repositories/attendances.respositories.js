@@ -156,11 +156,35 @@ async function numberOfCallsHours(dateStart, dateFinal, departament) {
     }
 }
 
+async function countAttendacesByTag(tag, dateStart, dateFinal, departament) {
+    try {
+        const conn = mongoose.createConnection(process.env.URL_MONGO)
+        const atendimento = conn.model('atendimentos', model.atendimentos)
+
+        const response = await atendimento.find({
+            "data.abertura": {
+                $gt: new Date(dateStart), $lt: new Date(dateFinal),
+            },
+            "tags.id": ObjectId(tag),
+            idSetor: ObjectId(departament)
+        }, {
+            _id: 1,
+            data: 1,
+            historicoAtendentes: 1
+        }).count()
+        await conn.close()
+        return response
+    } catch (error) {
+        return false
+    }
+}
+
 export default {
     attendancesAll,
     attendancesByDepartment,
     totalAttendancesAll,
     countAttendancesByReason,
     attendancesByReason,
-    numberOfCallsHours
+    numberOfCallsHours,
+    countAttendacesByTag
 }

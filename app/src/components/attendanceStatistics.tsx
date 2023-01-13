@@ -36,7 +36,8 @@ interface NumberCallHoursProps {
 const headersCsv = {
     reasons: [
         { label: "Motivo", key: "motivo" },
-        { label: "Quantidade", key: "quantidade" }
+        { label: "Quantidade", key: "quantidade" },
+        { label: "Departamento", key: "departamento" }
     ],
     numberCallsWaitingTime: [
         { label: "Setor", key: "setor" },
@@ -63,7 +64,8 @@ const headersCsv = {
 
 const columnsGridByReason: GridColDef[] = [
     { field: "motivo", headerName: "Motivo", width: 400 },
-    { field: "quantidade", headerName: "Quantidade", width: 150 }
+    { field: "quantidade", headerName: "Quantidade", width: 150 },
+    { field: "departamento", headerName: "Departamento", width: 150 }
 ]
 
 const columnsGridByNumberCallsWaitingTime: GridColDef[] = [
@@ -174,7 +176,7 @@ export function AttendanceByReason() {
                     if (response.data) {
                         setCallNumberHour(response.data)
                     }
-                })
+                }).catch(error => console.log(error))
             setIsFeching(false)
 
         }

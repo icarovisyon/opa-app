@@ -76,7 +76,14 @@ const atendimentosSchema = new mongoose.Schema({
             _id: ObjectId,
             data: Date
         }],
-    __v: 0
+    idMotivoAtendimento: ObjectId,
+    tag: [{
+        _id: ObjectId,
+        id: ObjectId,
+        idAtendente: ObjectId,
+        dataInsercao: Date
+    }],
+    __v: Number
 }, { collection: 'atendimentos' }
 )
 
